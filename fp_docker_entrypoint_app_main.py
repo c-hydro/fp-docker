@@ -70,10 +70,8 @@ def main():
     set_logging(logger_file=run_files['file_app_docker_log'])
 
     # Get parameters and data configuration file
-    if file_parameters is None:
-        file_parameters = run_files['file_app_runner_configuration_parameters_default']
-    if file_data is None:
-        file_data = run_files['file_app_runner_configuration_data_default']
+    file_parameters = run_files['file_app_runner_configuration_parameters_default']
+    file_data = run_files['file_app_runner_configuration_data_default']
 
     run_parameters_default = read_file_json(file_parameters)
     run_data_default = read_file_json(file_data)
