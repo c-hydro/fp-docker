@@ -163,34 +163,35 @@ def join_cmd(cmd_parts_list, cmd_sep=' '):
 
 # -------------------------------------------------------------------------------------
 # Method to compose cmd
-def compose_cmd(cmd, apps, files, time=None, interpreter="python"):
+def compose_cmd(cmd, apps, files, time=None, interpreter="python", excluded_keys=['_comment']):
 
     cmd_line_all = []
-    for cmd_tag, cmd_part in cmd.items():
-        cmd_scripts = cmd_part['script']
-        cmd_args = cmd_part['args']
+    for cmd_key, cmd_part in cmd.items():
+        if cmd_key not in excluded_keys:
+            cmd_scripts = cmd_part['script']
+            cmd_args = cmd_part['args']
 
-        cmd_line_app = []
-        for script, args in zip(cmd_scripts, cmd_args):
-            if script in list(apps.keys()):
-                app_def = apps[script]
+            cmd_line_app = []
+            for script, args in zip(cmd_scripts, cmd_args):
+                if script in list(apps.keys()):
+                    app_def = apps[script]
 
-                cmd_line_app = [interpreter, app_def]
-                for arg_key, arg_value in args.items():
+                    cmd_line_app = [interpreter, app_def]
+                    for arg_key, arg_value in args.items():
 
-                    if arg_key != '-time':
-                        if arg_value in list(files.keys()):
-                            arg_tmp = files[arg_value]
-                            arg_def = arg_key + ' ' + arg_tmp
+                        if arg_key != '-time':
+                            if arg_value in list(files.keys()):
+                                arg_tmp = files[arg_value]
+                                arg_def = arg_key + ' ' + arg_tmp
 
-                            cmd_line_app.extend([arg_def])
-                    else:
-                        if time is not None:
-                            arg_time = time
-                            arg_def = arg_key + ' ' + arg_time
-                            cmd_line_app.extend([arg_def])
+                                cmd_line_app.extend([arg_def])
+                        else:
+                            if time is not None:
+                                arg_time = time
+                                arg_def = arg_key + ' ' + arg_time
+                                cmd_line_app.extend([arg_def])
 
-        cmd_line_all.append(cmd_line_app)
+            cmd_line_all.append(cmd_line_app)
 
     return cmd_line_all
 # -------------------------------------------------------------------------------------
