@@ -300,7 +300,8 @@ def fill_structure(structure, information, look_up_table=None, time_format='%Y%m
                     else:
                         info_value = float(info_value)
 
-            structure = nested_set(structure, struct_keys_list, info_value, False)
+            if struct_keys_list is not None:
+                structure = nested_set(structure, struct_keys_list, info_value, False)
     return structure
 # -------------------------------------------------------------------------------------
 
