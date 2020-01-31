@@ -42,10 +42,10 @@
   },
   "file" : {
     "_comment": "filename(s) runner app configuration(s) in docker environment",
-    "file_app_runner_configuration_parameters_default": "hmc_runner_configuration_parameters_docker_default.json",
-    "file_app_runner_configuration_data_default": "hmc_runner_configuration_data_docker_default.json",
-    "file_app_runner_configuration_parameters_custom": "hmc_runner_configuration_parameters_docker_custom.json",
-    "file_app_runner_configuration_data_custom": "hmc_runner_configuration_data_docker_custom.json",
+    "file_app_runner_configuration_parameters_default": "hmc_configuration_parameters_docker_default.json",
+    "file_app_runner_configuration_data_default": "hmc_configuration_data_docker_default.json",
+    "file_app_runner_configuration_parameters_custom": "hmc_configuration_parameters_docker_custom.json",
+    "file_app_runner_configuration_data_custom": "hmc_configuration_data_docker_custom.json",
     "file_app_runner_log": "hmc_runner_log_docker.txt",
     "file_app_docker_log": "hmc_adapter_log_docker.txt"
   },
