@@ -217,13 +217,13 @@ def execute_cmd(command_line):
 
             if std_out == '' and proc_handle.poll() is not None:
                 if proc_handle.poll() == 0:
-                    logging.warning(' ====> WARNING: process execution ' + str(proc_handle.poll()) + ' KILLED!')
+                    logging.warning(' =====> WARNING: process execution ' + str(proc_handle.poll()) + ' KILLED!')
                     break
                 else:
-                    logging.error(' ====> ERROR: process execution FAILED! ')
+                    logging.error(' =====> ERROR: process execution FAILED! ')
                     raise ValueError("Check your settings")
             if std_out:
-                logging.info(str(std_out.strip()))
+                logging.info(' =====> ' + str(std_out.strip()))
 
         # Collect stdout and stderr and exitcode
         std_out, std_error = proc_handle.communicate()
@@ -386,6 +386,7 @@ def read_file_json(file_name):
             for env_key, env_value in env_ws.items():
                 env_tag = '$' + env_key
                 if env_tag in file_row:
+                    env_value = env_value.strip("'\\'")
                     file_row = file_row.replace(env_tag, env_value)
                     file_row = file_row.replace('//', '/')
 
@@ -419,7 +420,9 @@ def get_variable(var_group_envs=None, var_group_local=None,
         for var_key, var_name in var_group_envs.items():
             if not var_key == 'run_path_root':
                 if var_name in list(os.environ.keys()):
-                    var_def[var_key] = os.environ[var_name]
+                    var_value_raw = os.environ[var_name]
+                    var_value_def = var_value_raw.strip("'\\'")
+                    var_def[var_key] = var_value_def
                 else:
                     logging.info(' WARNING: environment variable ' + var_name + ' needed but not found!')
     else:
