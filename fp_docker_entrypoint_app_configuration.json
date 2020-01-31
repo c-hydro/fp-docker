@@ -53,7 +53,7 @@
     "_comment": "folder(s) runner app definition in docker environment",
     "folder_hmc_library" :"{run_path_root}/fp_envs/fp_libs_system/hmc/",
     "folder_data_static_land_point": "{run_path_root}/fp_data/static_data/point/",
-    "folder_data_static_land_gridded": "{run_path_root}/fp_data/static_data/gridded/",
+    "folder_data_static_land_gridded": "{run_path_root}/fp_data/static_data/land/",
     "folder_data_dynamic_restart_gridded": "{run_path_root}/fp_data/restart_data/gridded/%yyyy/%mm/%dd/",
     "folder_data_dynamic_restart_point": "{run_path_root}/fp_data/restart_data/point/%yyyy/%mm/%dd/",
     "folder_data_dynamic_forcing_gridded": "{run_path_root}/fp_data/dynamic_data/data_forcing/gridded/%yyyy/%mm/%dd/",
