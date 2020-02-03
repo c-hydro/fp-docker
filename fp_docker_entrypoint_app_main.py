@@ -283,25 +283,26 @@ def merge_dict(dict_list, excluded_keys=['_comment']):
 # Method to fill structure with information
 def fill_structure(structure, information, look_up_table=None, time_format='%Y%m%d%H%M'):
     for info_key, info_value in information.items():
-        if info_key in list(look_up_table.keys()):
-            struct_keys_list = look_up_table[info_key]
+        if info_value is not None:
+            if info_key in list(look_up_table.keys()):
+                struct_keys_list = look_up_table[info_key]
 
-            if isinstance(info_value, str):
+                if isinstance(info_value, str):
 
-                try:
-                    datetime.datetime.strptime(info_value, time_format)
-                    date_check = True
-                except ValueError:
-                    date_check = False
+                    try:
+                        datetime.datetime.strptime(info_value, time_format)
+                        date_check = True
+                    except ValueError:
+                        date_check = False
 
-                if (info_value.isnumeric()) and (date_check is False):
-                    if info_value.isdigit():
-                        info_value = int(info_value)
-                    else:
-                        info_value = float(info_value)
+                    if (info_value.isnumeric()) and (date_check is False):
+                        if info_value.isdigit():
+                            info_value = int(info_value)
+                        else:
+                            info_value = float(info_value)
 
-            if struct_keys_list is not None:
-                structure = nested_set(structure, struct_keys_list, info_value, False)
+                if struct_keys_list is not None:
+                    structure = nested_set(structure, struct_keys_list, info_value, False)
     return structure
 # -------------------------------------------------------------------------------------
 
@@ -333,12 +334,13 @@ def set_tags(names, tags, excluded_keys=['_comment']):
             names.pop(name_key, None)
 
     for name_key, name_value in names.items():
-        for tag_key, tag_value in tags.items():
-            if tag_key in name_value:
-                name_value = name_value.replace(tag_key, ':')
-                name_value = name_value.format(tag_value)
-                name_value = name_value.replace("//", "/")
-                names[name_key] = name_value
+        if name_value is not None:
+            for tag_key, tag_value in tags.items():
+                if tag_key in name_value:
+                    name_value = name_value.replace(tag_key, ':')
+                    name_value = name_value.format(tag_value)
+                    name_value = name_value.replace("//", "/")
+                    names[name_key] = name_value
     return names
 # -------------------------------------------------------------------------------------
 
@@ -351,14 +353,15 @@ def make_folder(path_folder_list, sep_string='%'):
         path_folder_list = [path_folder_list]
 
     for path_folder in path_folder_list:
-        if sep_string in path_folder:
-            path_folder_root, path_dyn = path_folder.split(sep_string, 1)
-        else:
-            path_folder_root = path_folder
+        if path_folder is not None:
+            if sep_string in path_folder:
+                path_folder_root, path_dyn = path_folder.split(sep_string, 1)
+            else:
+                path_folder_root = path_folder
 
-        if not os.path.exists(path_folder_root):
-            os.makedirs(path_folder_root)
-# -------------------------------------------------------------------------------------
+            if not os.path.exists(path_folder_root):
+                os.makedirs(path_folder_root)
+    # -------------------------------------------------------------------------------------
 
 
 # -------------------------------------------------------------------------------------
