@@ -69,7 +69,7 @@
     "folder_run_exec": "{run_path_root}/fp_run/exec/",
     "folder_run_tmp": "{run_path_root}/fp_run/tmp/",
     "folder_run_cache" :"{run_path_root}/fp_run/cache/",
-    "folder_run_library" :"{run_path_root}/fp_library/",
+    "folder_run_library" :"{run_path_root}/fp_envs/fp_libs_system/hmc/",
     "folder_app_runner_main": "{run_path_root}/fp_package/fp_hmc/apps/",
     "folder_app_runner_configuration_parameters_custom": "{run_path_root}/fp_package/fp_hmc/apps/",
     "folder_app_runner_configuration_data_custom": "{run_path_root}/fp_package/fp_hmc/apps/",
