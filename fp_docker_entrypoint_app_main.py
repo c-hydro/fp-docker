@@ -3,7 +3,7 @@
 """
 Flood-Proofs Docker Tool - Entrypoint App
 
-__date__ = '20200131'
+__date__ = '20200204'
 __version__ = '1.0.0'
 __author__ = 'Fabio Delogu (fabio.delogu@cimafoundation.org'
 __library__ = 'docker'
@@ -16,6 +16,7 @@ python fp_docker_entrypoint_app_main.py -settings_file configuration.json
 # Complete library
 import logging
 import os
+import sys
 import subprocess
 import time
 import datetime
@@ -130,10 +131,10 @@ def main():
 
     # -------------------------------------------------------------------------------------
     # Run command-line list
-    logging.info(' ===> Run command-line ... ')
+    logging.info(' ===> Set process execution ... ')
     for run_cmd_id in run_cmd_upd:
         execute_cmd(run_cmd_id)
-    logging.info(' ===> Run command-line ... OK')
+    logging.info(' ===> Set process execution ... OK')
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
@@ -203,50 +204,27 @@ def execute_cmd(command_line):
 
     try:
         # Info start
-        logging.info(' ====> Process execution: ' + command_line + ' ... ')
-        # Execute command-line
-        proc_handle = subprocess.Popen(command_line,
-                                       shell=True,
-                                       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logging.info(' ====> Process execution [' + command_line + '] ... ')
 
-        # Read standard output
-        while True:
-            std_out = proc_handle.stdout.readline()
-            if isinstance(std_out, bytes):
-                std_out = std_out.decode('UTF-8')
+        # Check command-line calling
+        subprocess.check_call(command_line, shell=True)
+        # Execute command-line calling
+        return_code = subprocess.call(command_line, shell=True)
 
-            if std_out == '' and proc_handle.poll() is not None:
-                if proc_handle.poll() == 0:
-                    logging.warning(' =====> WARNING: process execution ' + str(proc_handle.poll()) + ' KILLED!')
-                    break
-                else:
-                    logging.error(' =====> ERROR: process execution FAILED! ')
-                    raise ValueError("Check your settings")
-            if std_out:
-                logging.info(' =====> ' + str(std_out.strip()))
+        if return_code != 0:
+            logging.warning(' ====> Process execution [' + command_line + '] ... RETURN ERROR(S)!')
+            logging.warning(' ====> Return Code: ' + str(return_code))
+        else:
+            logging.info(' ====> Process execution [' + command_line + '] ... OK')
 
-        # Collect stdout and stderr and exitcode
-        std_out, std_error = proc_handle.communicate()
-        std_exit = proc_handle.poll()
-
-        if std_out == b'' or std_out == '':
-            std_out = None
-        if std_error == b'' or std_error == '':
-            std_error = None
-
-        # Info end
-        logging.info(' ====> Process execution: ' + command_line + ' ... DONE')
-        return std_out, std_error, std_exit
-
-    except subprocess.CalledProcessError:
-        # Exit code for process error
-        logging.error(' ====> ERROR: process execution FAILED!')
-        raise SystemExit("Errors in calling executable")
-
-    except OSError as os_error:
-        # Exit code for os error
-        logging.error(' ====> ERROR: process execution FAILED!')
-        raise OSError("Executable not found " + str(os_error))
+    except subprocess.CalledProcessError as err:
+        logging.error(' ====> Process execution [' + command_line + '] ... FAILED!')
+        logging.error(' ====> Process error(s): ' + str(err))
+        raise subprocess.CalledProcessError("Process execution FAILED!")
+    except OSError as err:
+        logging.error(' ====> Process execution [' + command_line + '] ... FAILED!')
+        logging.error(' ====> Process error(s): ' + str(err))
+        raise OSError("Process execution FAILED!")
 
 # -------------------------------------------------------------------------------------
 
