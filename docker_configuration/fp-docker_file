@@ -91,7 +91,7 @@ RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.pr
 RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
 RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
 WORKDIR ${fp_folder_entrypoint}
-COPY fp-docker_entrypoint_app_interface.sh ${fp_folder_entrypoint}/fp-docker_entrypoint_app_interface.sh
+#COPY fp-docker_entrypoint_app_interface.sh ${fp_folder_entrypoint}/fp-docker_entrypoint_app_interface.sh
 ENTRYPOINT ${fp_folder_entrypoint}"fp-docker_entrypoint_app_interface.sh"
 CMD []
 
