@@ -33,7 +33,15 @@ echo " ==> "$script_name" (Version: "$script_version" Release_Date: "$script_dat
 echo " ==> START ..."
 
 # Source profile environment(s)
-source $HOME/.profile
+set -e
+
+if [ -t 0 ] ; then
+	echo "(interactive shell)"
+	source $HOME/.bashrc
+else
+	echo "(not interactive shell)"
+	source $HOME/.profile
+fi
 
 # Check environment variable(s) to set entrypoint script
 if [ -z ${APP_MAIN} ] ; then
