@@ -103,7 +103,7 @@ echo echo " ===> Run $image_full_name "
 # Run docker
 docker run ${container_extra_opts}\
  	--workdir ${container_workdir}\
- 	--name ${container_name} -app_main ${image_app_entrypoint_main} -app_configuration ${image_app_entrypoint_configuration}\
+ 	--name ${container_name}\ #-app_main ${image_app_entrypoint_main} -app_configuration ${image_app_entrypoint_configuration}\
  	--rm\
  	--env-file ${container_env_file}\
  	--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
