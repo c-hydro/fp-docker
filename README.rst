@@ -129,13 +129,13 @@ the Flood-PROOFS modelling system. The structure of the repository is reported b
 
 ::
 	
-	**fp-docker**
-	├── **docker_configuration**
+	fp-docker
+	├── docker_configuration
 	│   ├── fp-docker_builder.sh
 	│   ├── fp-docker_file
 	│   ├── fp-docker_runner.sh
 	│   └── fp-docker_variables.env
-	├── **docker_entrypoint**
+	├── docker_entrypoint
 	│   ├── fp_docker_entrypoint_app_configuration.json
 	│   ├── fp-docker_entrypoint_app_interface.sh
 	│   └── fp_docker_entrypoint_app_main.py
@@ -172,8 +172,8 @@ The docker **build** command builds Docker images from a Dockerfile and a “con
 located in the specified PATH or URL. The build process can refer to any of the files in the context. For example, your build 
 can use a COPY instruction to reference a file in the context.
 
-In order to build the dockers, in the **docker_configuration** scripts, Dockerfiles and environment variable files are provided.
-The generic command-line to invoke the building of the Docker file is the following:
+In order to build the Dockers, in the **docker_configuration** and in **docker_entrypoint** folders, bash and python3 scripts, 
+Dockerfiles and environment variable files are provided. The generic command-line to invoke the building of the Docker file is the following:
 
 .. code-block:: bash
 
@@ -221,8 +221,29 @@ For the Flood-PROOFS virtualization an example of .env file is reported below:
 	RUN_ENS=false
 
 All the information are used in building and running parts. To achive a correct settings of Flood-PROOFS Dockers
-all the fields must be filled. The SOURCE folders are referred to the host machine, whilst the TARGET folders are
-intended the folders of the containers
+all the fields must be filled. In the following lines, the meanings of each field will be explained.
+
+The first part is for the building section:
+
+	* image_version: version of the image [string];
+	* image_base_name: base name of the image [string];
+	* image_app_name: application name of the image [string]; 
+	* image_app_file: filename of the image Dockerfile [string];
+	* image_repository: source root of the image (e.g. in GitHub) [string];
+	* container_workdir: absolute path of the working directory referred to the container [string];
+	* container_name: name of the container [string];
+	* image_app_entrypoint_main: application filename for configuring entrypoint activities [string];
+	* image_app_entrypoint_configuration: configuring filename of the entrypoint activities [string].
+
+The second part is for the running section:
+
+	* SOURCE Folders: absolute paths referred to the host folders [string];
+	* TARGET folders: absolute paths referred to the container folders [string];
+	* RUN_TIME_NOW: reference time of the simulation (e.g. time reference for a test case or for a real-time simulation) [yyyy-mm-dd HH:MM];
+	* RUN_TIME_STEPS_OBS: time steps in the simulation observed part [integer];
+	* RUN_TIME_STEPS_FOR: time steps in the simulation forecasting part [integer];
+	* RUN_NAME: name of the simulation [string];
+	* RUN_ENS: simulation mode (deterministic/probabilistic) [boolean: false/true].
 
 Dockerfile
 ----------
@@ -231,32 +252,194 @@ Docker can build images automatically by reading the instructions from a Dockerf
 contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an 
 automated build that executes several command-line instructions in succession.
 
+In Flood-PROOFS virtualization, Dockers are set on 64 bit Linux Debian/Ubuntu distribution (e.g. 18.04, 18.10) and the building
+part uses the tools downloaded from the github c-hydro repository for installing libraries, packages and applications.
+The default build of Docker images provides the configuration of:
+	* system libraries needed by the modelling system (e.g. ZLIB, HDF5, NetCDF4);
+	* python3 virtual environment based on miniconda framework;
+	* python3 packages for processing data, runnning model and postprocessing or visualizing results (e.g fp-hyde, hmc, fp-hat);
+	* an entrypoint script to configure processes and applications according with the run options. 
 
-here
+An example of Dockerfile is reported below:
+
+:: 
+
+	# start from base -- builder
+	FROM ubuntu:18.10 as builder
+
+	# label(s)
+	LABEL maintainer="Fabio Delogu"
+	LABEL email="fabio.delogu@cimafoundation.org"
+	LABEL version="1.0.0"
+	LABEL release_date="2020/02/04"
+
+	# change default shell (from sh to bash)
+	SHELL ["/bin/bash", "-c"]
+
+	# install system-wide deps 
+	RUN apt-get update && apt-get install -y \
+		git \
+		gfortran \
+		gcc \
+		m4 \
+		g++ \
+		make \
+		mc \
+		curl \
+		build-essential \
+		wget \
+		cmake \
+		libcurl4-openssl-dev \
+		openjdk-8-jdk \
+		bash-completion
+
+	# set user and workdir check
+	RUN useradd -m -p fp -s /bin/bash fp
+	WORKDIR /home/fp/
+	USER fp
+	RUN pwd
+
+	# set environment folder(s)
+	ENV fp_folder_entrypoint /home/fp/fp_entrypoint/
+	ENV fp_folder_libs_installer /home/fp/fp_envs/fp_libs_installer/
+	ENV fp_folder_libs_system /home/fp/fp_envs/fp_libs_system/
+	ENV fp_folder_libs_python /home/fp/fp_envs/fp_libs_python/
+	ENV fp_folder_package_hmc /home/fp/fp_package/fp_hmc/
+	ENV fp_folder_mount /home/fp/fp_mount/
+
+	# set environment filename(s)
+	ENV fp_file_env_system fp_env_system
+	ENV fp_file_env_python fp_env_python
+
+	# create folder
+	RUN mkdir -p ${fp_folder_libs_installer}
+	RUN mkdir -p ${fp_folder_package_hmc}
+	RUN mkdir -p ${fp_folder_entrypoint}
+	RUN mkdir -p ${fp_folder_mount}
+
+	# get fp envs from github repository
+	RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-envs.git --branch v1.5.2 --single-branch /tmp/fp-envs
+	# copy files from tmp to container folder(s)
+	RUN cp -r /tmp/fp-envs/. ${fp_folder_libs_installer} 
+
+	...
+
+Entrypoint
+----------
+
+The ENTRYPOINT instruction define what command gets executed when running a container. Dockerfile should specify an ENTRYPOINT 
+command in order to define when the container will be run as an executable. It is possible to set a CMD command to define the 
+default arguments for an ENTRYPOINT command or for executing an ad-hoc command in a container. In this case, CMD will be 
+overridden when running the container with alternative arguments.
+
+In the Flood-PROOFS virtualization the ENTRYPOINT is defined by three elements:
+	* a bash script to interface the host machine and the container [fp-docker_entrypoint_app_interface.sh];
+	* a python3 script to run all the configured application [fp_docker_entrypoint_app_main.py];
+	* a json file to configure the python3 script [fp_docker_entrypoint_app_configuration.json].
+
+In the building part, the bash script is set using the ENTRYPOINT keyword; during the running part (if set in automatic mode),
+the container executes the bash script to run the python3 script with its configuration file.
 
 Run dockers
 ***********
 
 The docker **run** command first creates a writeable container layer over the specified image, and then starts it using the 
-specified command. That is, docker run is equivalent to the API /containers/create then /containers/(id)/start. A stopped 
-container can be restarted with all its previous changes intact using docker start.
+specified command. A stopped container can be restarted with all its previous changes intact using docker start.
 When an operator executes docker run, the container process that runs is isolated in that it has its own file system, its own 
 networking, and its own isolated process tree separate from the host.
 
-.. code-block:: bash
+In Flood-PROOFS virtualization, the running part can be activated in two configuration:
 
-	>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+	* Executable mode:
 
-.. code-block:: bash
+	.. code-block:: bash
 
-	>> ./fp-docker_runner.sh -i -f fp-docker_variables.env 
+		>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+
+	* Debug mode:
+	
+	.. code-block:: bash
+
+		>> ./fp-docker_runner.sh -i -f fp-docker_variables.env 
 
 where the -f flag is used to pass the Environment variable file to the building script.
 
-LEXIS
-*****
+Flood-PROOFS Applications
+*************************
 
-LEXIS workflow using Docker ...
+LEXIS project
+-------------
+
+The Flood-PROOFS virtualization is applied in LEXIS project; the main goal is organize an 
+operational chain using the computing resources available in a cloud framework. The simulations
+that will be implemented are defined as follow:
+
+* **fp_state_ws_observed**
+
+  Simulation based on the weather station observations to generate the initial conditions of the 
+  Hydrological Model Continuum. The simulation covers the observed period.
+
+  - simulation_length_obs: 10 days
+  - simulation_length_for: 0 days
+  - simulation_domain_n: NA
+  - simulation_type: deterministic
+  - simulation_n: 1/day * simulation_domain
+
+* **fp_run_ws_observed**
+	
+	Simulation based on the weather station observations to compute the time-series datasets (e.g discharge, 
+	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+	using the Hydrological Model Continuum. The simulation covers the observed period.
+
+  - simulation_length_obs: 2 days
+  - simulation_length_for: 0 days
+  - simulation_domain_n: NA
+  - simulation_type: deterministic
+  - simulation_n: 1/day * simulation_domain
+
+* **fp_run_nwp_deterministic**
+	
+	Simulation based on the weather station observations and on the nwp datasets to compute the time-series datasets (e.g discharge, 
+	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+	using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+	
+	- simulation_length_obs: 2 days
+  - simulation_length_for: 2 days
+  - simulation_domain_n: NA
+  - simulation_type: deterministic
+  - simulation_n: 1/day * simulation_domain
+
+* **fp_run_nwp_probabilistic**	
+  
+  Simulation based on the weather station observations and on the perturbed and disaggregated nwp datasets to compute the 
+  time-series datasets (e.g discharge, dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration 
+  and snow cover) using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+
+	- simulation_length_obs: 2 days
+  - simulation_length_for: 2 days
+  - simulation_domain_n: NA
+  - simulation_type: probabilistic
+  - simulation_n: 30/day * simulation_domain
+
+* **fp_test**
+	
+	For testing each components of the operational chain, the users have to launch procedures following the steps above:
+	
+	* create and update the fp-docker_variables.env file according with the host and simulation features;
+	* organize data in SOURCE folders;
+	* building the image:
+	
+	.. code-block:: bash
+
+		>> ./fp-docker_builder.sh -f fp-docker_variables.env
+
+	* running the container in executable mode:
+	
+		.. code-block:: bash
+
+		>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+
+  * collect data in the SOURCE folders.
 
 Potential Users
 ***************
@@ -324,7 +507,7 @@ References
 .. _3: https://en.wikipedia.org/wiki/Fortran
 .. _4: https://qgis.org/en/site/
 .. _5: https://www.r-project.org/
-.. _6: https://github.com/c-hydro/fp-env
+.. _6: https://github.com/c-hydro/fp-envs
 .. _7: https://conda.io/miniconda.html
 .. _8: https://zlib.net/
 .. _9: https://www.hdfgroup.org/solutions/hdf5/
