@@ -71,8 +71,9 @@ In order to use the Docker framework, the users have to perform the following st
 
 	>> curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 
+
 5. Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88, 
-	 by searching for the last 8 characters of the fingerprint:
+by searching for the last 8 characters of the fingerprint:
 
 .. code-block:: bash
 
@@ -145,6 +146,7 @@ the Flood-PROOFS modelling system. The structure of the repository is reported b
 	└── README.rst
 
 Particularly:
+
     • **docker_configuration**: tools to build and run the Flood-PROOFS dockers;
     • **docker_entrypoint**: tools to configure the entrypoints of the Flood-PROOFS dockers.
 
@@ -255,6 +257,7 @@ automated build that executes several command-line instructions in succession.
 In Flood-PROOFS virtualization, Dockers are set on 64 bit Linux Debian/Ubuntu distribution (e.g. 18.04, 18.10) and the building
 part uses the tools downloaded from the github c-hydro repository for installing libraries, packages and applications.
 The default build of Docker images provides the configuration of:
+
 	* system libraries needed by the modelling system (e.g. ZLIB, HDF5, NetCDF4);
 	* python3 virtual environment based on miniconda framework;
 	* python3 packages for processing data, runnning model and postprocessing or visualizing results (e.g fp-hyde, hmc, fp-hat);
@@ -333,6 +336,7 @@ default arguments for an ENTRYPOINT command or for executing an ad-hoc command i
 overridden when running the container with alternative arguments.
 
 In the Flood-PROOFS virtualization the ENTRYPOINT is defined by three elements:
+
 	* a bash script to interface the host machine and the container [fp-docker_entrypoint_app_interface.sh];
 	* a python3 script to run all the configured application [fp_docker_entrypoint_app_main.py];
 	* a json file to configure the python3 script [fp_docker_entrypoint_app_configuration.json].
@@ -376,70 +380,70 @@ that will be implemented are defined as follow:
 
 * **fp_state_ws_observed**
 
-  Simulation based on the weather station observations to generate the initial conditions of the 
-  Hydrological Model Continuum. The simulation covers the observed period.
+Simulation based on the weather station observations to generate the initial conditions of the 
+Hydrological Model Continuum. The simulation covers the observed period.
 
-  - simulation_length_obs: 10 days
-  - simulation_length_for: 0 days
-  - simulation_domain_n: NA
-  - simulation_type: deterministic
-  - simulation_n: 1/day * simulation_domain
+- simulation_length_obs: 10 days
+- simulation_length_for: 0 days
+- simulation_domain_n: NA
+- simulation_type: deterministic
+- simulation_n: 1/day * simulation_domain
 
 * **fp_run_ws_observed**
 	
-	Simulation based on the weather station observations to compute the time-series datasets (e.g discharge, 
-	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
-	using the Hydrological Model Continuum. The simulation covers the observed period.
+Simulation based on the weather station observations to compute the time-series datasets (e.g discharge, 
+dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+using the Hydrological Model Continuum. The simulation covers the observed period.
 
-  - simulation_length_obs: 2 days
-  - simulation_length_for: 0 days
-  - simulation_domain_n: NA
-  - simulation_type: deterministic
-  - simulation_n: 1/day * simulation_domain
+- simulation_length_obs: 2 days
+- simulation_length_for: 0 days
+- simulation_domain_n: NA
+- simulation_type: deterministic
+- simulation_n: 1/day * simulation_domain
 
 * **fp_run_nwp_deterministic**
 	
-	Simulation based on the weather station observations and on the nwp datasets to compute the time-series datasets (e.g discharge, 
-	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
-	using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
-	
-	- simulation_length_obs: 2 days
-  - simulation_length_for: 2 days
-  - simulation_domain_n: NA
-  - simulation_type: deterministic
-  - simulation_n: 1/day * simulation_domain
+Simulation based on the weather station observations and on the nwp datasets to compute the time-series datasets (e.g discharge, 
+dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+
+- simulation_length_obs: 2 days
+- simulation_length_for: 2 days
+- simulation_domain_n: NA
+- simulation_type: deterministic
+- simulation_n: 1/day * simulation_domain
 
 * **fp_run_nwp_probabilistic**	
   
-  Simulation based on the weather station observations and on the perturbed and disaggregated nwp datasets to compute the 
-  time-series datasets (e.g discharge, dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration 
-  and snow cover) using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+Simulation based on the weather station observations and on the perturbed and disaggregated nwp datasets to compute the 
+time-series datasets (e.g discharge, dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration 
+and snow cover) using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
 
-	- simulation_length_obs: 2 days
-  - simulation_length_for: 2 days
-  - simulation_domain_n: NA
-  - simulation_type: probabilistic
-  - simulation_n: 30/day * simulation_domain
+- simulation_length_obs: 2 days
+- simulation_length_for: 2 days
+- simulation_domain_n: NA
+- simulation_type: probabilistic
+- simulation_n: 30/day * simulation_domain
 
 * **fp_test**
 	
-	For testing each components of the operational chain, the users have to launch procedures following the steps above:
-	
-	* create and update the fp-docker_variables.env file according with the host and simulation features;
-	* organize data in SOURCE folders;
-	* building the image:
-	
-	.. code-block:: bash
+For testing each components of the operational chain, the users have to launch procedures following the steps above:
 
-		>> ./fp-docker_builder.sh -f fp-docker_variables.env
+* create and update the fp-docker_variables.env file according with the host and simulation features;
+* organize data in SOURCE folders;
+* building the image:
 
-	* running the container in executable mode:
-	
-		.. code-block:: bash
+.. code-block:: bash
 
-		>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+	>> ./fp-docker_builder.sh -f fp-docker_variables.env
 
-  * collect data in the SOURCE folders.
+* running the container in executable mode:
+
+.. code-block:: bash
+
+	>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+
+* collect data in the SOURCE folders.
 
 Potential Users
 ***************
