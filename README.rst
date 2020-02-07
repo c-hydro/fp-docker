@@ -148,7 +148,8 @@ the Flood-PROOFS modelling system. The structure of the repository is reported b
 Particularly:
 
     • **docker_configuration**: tools to build and run the Flood-PROOFS dockers;
-    • **docker_entrypoint**: tools to configure the entrypoints of the Flood-PROOFS dockers.
+    • **docker_entrypoint**: tools to configure the entrypoints of the Flood-PROOFS dockers;
+    * **docker_testcase**: datasets to test the Flood-PROOFS dockers.
 
 All codes and datasets are freely available and users can be get them from our github repository [1_].
 
@@ -239,8 +240,20 @@ The first part is for the building section:
 
 The second part is for the running section:
 
-	* SOURCE Folders: absolute paths referred to the host folders [string];
+	* SOURCE Folders: absolute paths referred to the host folders [string]
+		- SOURCE_DATA_STATIC: static data folders (land and point) of the Hydrological Model Continuum;
+		- SOURCE_DATA_RESTART: restart data folders (initial conditions) of the Hydrological Model Continuum;
+		- SOURCE_DATA_DYNAMIC_OBS: observed dynamic data folders (weather stations, satellite, radar) of the Hydrological Model Continuum;
+		- SOURCE_DATA_DYNAMIC_FOR: forecast dynamic data folders (nwp deterministic and/or probabilistic) of the Hydrological Model Continuum;
+		- SOURCE_DATA_ARCHIVE: outcome and state dynamic data folders of the Hydrological Model Continuum;
+
 	* TARGET folders: absolute paths referred to the container folders [string];
+		- TARGET_DATA_STATIC: static data folders (land and point) of the Hydrological Model Continuum;
+		- TARGET_DATA_RESTART: restart data folders (initial conditions) of the Hydrological Model Continuum;
+		- TARGET_DATA_DYNAMIC_OBS: observed dynamic data folders (weather stations, satellite, radar) of the Hydrological Model Continuum;
+		- TARGET_DATA_DYNAMIC_FOR: forecast dynamic data folders (nwp deterministic and/or probabilistic) of the Hydrological Model Continuum;
+		- TARGET_DATA_ARCHIVE: outcome and state dynamic data folders of the Hydrological Model Continuum;
+
 	* RUN_TIME_NOW: reference time of the simulation (e.g. time reference for a test case or for a real-time simulation) [yyyy-mm-dd HH:MM];
 	* RUN_TIME_STEPS_OBS: time steps in the simulation observed part [integer];
 	* RUN_TIME_STEPS_FOR: time steps in the simulation forecasting part [integer];
@@ -367,6 +380,64 @@ In Flood-PROOFS virtualization, the running part can be activated in two configu
 		>> ./fp-docker_runner.sh -i -f fp-docker_variables.env 
 
 where the -f flag is used to pass the Environment variable file to the building script.
+The structure of the container is reported below:
+
+::
+
+	fp
+	├── fp_entrypoint
+	│   ├── fp_docker_entrypoint_app_configuration.json
+	│   ├── fp-docker_entrypoint_app_interface.sh
+	│   └── fp_docker_entrypoint_app_main.py
+	├── fp_envs
+	│   ├── fp_libs_installer
+	│   │   ├── miniconda.sh
+	│   │   ├── setup_fp_env_hmc.sh
+	│   │   ├── setup_fp_env_python.sh
+	│   │   └── setup_fp_env_system.sh
+	│   ├── fp_libs_python
+	│   └── fp_libs_system
+	│       ├── fp_env_system
+	│       ├── hdf5
+	│       ├── hmc
+	│       ├── nc4
+	│       ├── source
+	│       └── zlib
+	├── fp_logs
+	│   ├── hmc_adapter_log_docker.txt
+	│   └── hmc_runner_log_docker.txt
+	├── fp_mount
+	│   ├── archive
+	│   │   └── 2019
+	│   └── data
+	│       ├── forcing
+	│       └── static
+	├── fp_package
+	│   └── fp_hmc
+	│       ├── apps
+	│       ├── AUTHORS.rst
+	│       ├── bin
+	│       ├── CHANGELOG.rst
+	│       ├── docs
+	│       ├── hmc
+	│       ├── LICENSE.rst
+	│       ├── README.rst
+	│       └── readthedocs.yml
+	└── fp_run
+	    ├── cache
+	    ├── data
+	    │   ├── forcing
+	    │   ├── outcome
+	    │   ├── restart
+	    │   └── state
+	    ├── exec
+	    │   ├── fort.20
+	    │   ├── hmc.log
+	    │   ├── HMC_Model_V2_wrf_deterministic.x
+	    │   ├── HMC_Model_V2_wrf_deterministic.x_OLD
+	    │   ├── LogZip.txt
+	    │   └── marche.info.txt
+	    └── tmp
 
 Flood-PROOFS Applications
 *************************
@@ -427,10 +498,16 @@ and snow cover) using the Hydrological Model Continuum. The simulation covers bo
 
 * **fp_test**
 	
-For testing each components of the operational chain, the users have to launch procedures following the steps above:
+For testing each components of the operational chain, the users have to launch procedures following the steps below:
 
-* create and update the fp-docker_variables.env file according with the host and simulation features;
-* organize data in SOURCE folders;
+* download the **docker_testcase** folders from the github repository;
+* create and update the fp-docker_variables.env file according with the host, the container and the simulation features; 
+* organize data in SOURCE folders; particularly, folders have to be organized as follows:
+		- SOURCE_DATA_STATIC='/docker_testcase/data/static_data/'
+		- SOURCE_DATA_RESTART='/docker_testcase/data/restart_data/'
+		- SOURCE_DATA_DYNAMIC_OBS='/docker_testcase/data/dynamic_data/observation/'
+		- SOURCE_DATA_DYNAMIC_FOR='/docker_testcase/data/dynamic_data/observation/'
+		- SOURCE_DATA_ARCHIVE='/docker_testcase/archive/'
 * building the image:
 
 .. code-block:: bash
@@ -443,8 +520,8 @@ For testing each components of the operational chain, the users have to launch p
 
 	>> ./fp-docker_runner.sh -f fp-docker_variables.env 
 
-* collect data in the SOURCE folders.
-
+* collect data in the SOURCE_DATA_ARCHIVE folders.
+  
 Potential Users
 ***************
 
