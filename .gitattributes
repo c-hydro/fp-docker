@@ -1,1 +1,2 @@
-docker_testcase/** filter=lfs diff=lfs merge=lfs -text
+docker_testcase/data/dynamic_data/** filter=lfs diff=lfs merge=lfs -text
+docker_testcase/data/static_data/** filter=lfs diff=lfs merge=lfs -text
