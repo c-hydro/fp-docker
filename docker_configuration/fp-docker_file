@@ -4,7 +4,7 @@ FROM ubuntu:18.10 as builder
 # label(s)
 LABEL maintainer="Fabio Delogu"
 LABEL email="fabio.delogu@cimafoundation.org"
-LABEL version="1.0.1"
+LABEL version="1.0.0"
 LABEL release_date="2020/02/04"
 
 # change default shell (from sh to bash)
@@ -71,44 +71,26 @@ WORKDIR ${fp_folder_libs_installer}
 RUN pwd
 RUN ./setup_fp_env_python.sh ${fp_folder_libs_python} ${fp_file_env_python}
 
-# set environmental variable(s) appending in bashrc
+# set environmental variable(s) appending in .bashrc
 RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.bashrc
 RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.bashrc
 RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.bashrc
+# set environmental variable(s) appending in .profile
+RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.profile
+RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
+RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.5 --single-branch /tmp/hmc
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.6 --single-branch /tmp/hmc
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/hmc/. ${fp_folder_package_hmc} 
 
 # get hmc python package from github repository
 RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.0 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
-RUN cp -r /tmp/fp-docker/. ${fp_folder_entrypoint} 
+RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
-# exit in workdir 
-RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.profile
-RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
-RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
+# set entrypoint
 WORKDIR ${fp_folder_entrypoint}
-#COPY fp-docker_entrypoint_app_interface.sh ${fp_folder_entrypoint}/fp-docker_entrypoint_app_interface.sh
 ENTRYPOINT ${fp_folder_entrypoint}"fp-docker_entrypoint_app_interface.sh"
 CMD []
-
-#CMD ["python", "./${fp_folder_entrypoint}fp_docker_entrypoint_app_main.py"]
-# CMD python /home/fp/fp_entrypoint/fp_docker_entrypoint_app_main.py
-
-#ENV fp_exec_python /home/fp/fp_envs/fp_libs_python/envs/virtualenv_python3/bin/python
-
-#ENV PATH /home/fp/fp_envs/fp_libs_python/envs/virtualenv_python3/bin:$PATH
-#ENV PYTHONPATH "${PYTHONPATH}:$fp_folder_package_hmc"
-
-# set docker entrypoint (to execute automatically starting script)
-#WORKDIR ${fp_folder_entrypoint}
-#RUN chmod go+rx /home/fp/fp_entrypoint/fp_docker_entrypoint_app_main.py
-#CMD "source /home/fp/.bashrc && python"
-# /home/fp/fp_entrypoint/fp_docker_entrypoint_app_main.py -settings_file /home/fp/fp_entrypoint/fp_docker_entrypoint_app_configuration.json"
-
-# copy entrypoint file (to execute wrapper, runner and starting script(s))
-# COPY docker-fp_entrypoint.sh ${fp_folder_entrypoint}/docker-fp_entrypoint.sh
-#
