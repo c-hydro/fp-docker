@@ -117,6 +117,8 @@ If this error happens:
 
 	>> WARNING: Error loading config file: /home/user/.docker/config.json - stat /home/user/.docker/config.json: permission denied
 
+users can solve it applying the following commands:
+
 .. code-block:: bash
 
 	>> sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
@@ -148,8 +150,8 @@ the Flood-PROOFS modelling system. The structure of the repository is reported b
 Particularly:
 
     • **docker_configuration**: tools to build and run the Flood-PROOFS dockers;
-    • **docker_entrypoint**: tools to configure the entrypoints of the Flood-PROOFS dockers;
-    * **docker_testcase**: datasets to test the Flood-PROOFS dockers.
+    • **docker_entrypoint**: tools to configure the entrypoints of the Flood-PROOFS dockers
+   	• **docker_testcase**: datasets to test the Flood-PROOFS dockers.
 
 All codes and datasets are freely available and users can be get them from our github repository [1_].
 
@@ -240,7 +242,8 @@ The first part is for the building section:
 
 The second part is for the running section:
 
-	* SOURCE Folders: absolute paths referred to the host folders [string]
+	* SOURCE Folders: absolute paths referred to the host folders [string]:
+
 		- SOURCE_DATA_STATIC: static data folders (land and point) of the Hydrological Model Continuum;
 		- SOURCE_DATA_RESTART: restart data folders (initial conditions) of the Hydrological Model Continuum;
 		- SOURCE_DATA_DYNAMIC_OBS: observed dynamic data folders (weather stations, satellite, radar) of the Hydrological Model Continuum;
@@ -248,6 +251,7 @@ The second part is for the running section:
 		- SOURCE_DATA_ARCHIVE: outcome and state dynamic data folders of the Hydrological Model Continuum;
 
 	* TARGET folders: absolute paths referred to the container folders [string];
+
 		- TARGET_DATA_STATIC: static data folders (land and point) of the Hydrological Model Continuum;
 		- TARGET_DATA_RESTART: restart data folders (initial conditions) of the Hydrological Model Continuum;
 		- TARGET_DATA_DYNAMIC_OBS: observed dynamic data folders (weather stations, satellite, radar) of the Hydrological Model Continuum;
@@ -271,10 +275,10 @@ In Flood-PROOFS virtualization, Dockers are set on 64 bit Linux Debian/Ubuntu di
 part uses the tools downloaded from the github c-hydro repository for installing libraries, packages and applications.
 The default build of Docker images provides the configuration of:
 
-	* system libraries needed by the modelling system (e.g. ZLIB, HDF5, NetCDF4);
-	* python3 virtual environment based on miniconda framework;
-	* python3 packages for processing data, runnning model and postprocessing or visualizing results (e.g fp-hyde, hmc, fp-hat);
-	* an entrypoint script to configure processes and applications according with the run options. 
+* system libraries needed by the modelling system (e.g. ZLIB, HDF5, NetCDF4);
+* python3 virtual environment based on miniconda framework;
+* python3 packages for processing data, runnning model and postprocessing or visualizing results (e.g fp-hyde, hmc, fp-hat);
+* an entrypoint script to configure processes and applications according with the run options. 						
 
 An example of Dockerfile is reported below:
 
@@ -350,9 +354,9 @@ overridden when running the container with alternative arguments.
 
 In the Flood-PROOFS virtualization the ENTRYPOINT is defined by three elements:
 
-	* a bash script to interface the host machine and the container [fp-docker_entrypoint_app_interface.sh];
-	* a python3 script to run all the configured application [fp_docker_entrypoint_app_main.py];
-	* a json file to configure the python3 script [fp_docker_entrypoint_app_configuration.json].
+* a bash script to interface the host machine and the container [fp-docker_entrypoint_app_interface.sh];
+* a python3 script to run all the configured application [fp_docker_entrypoint_app_main.py];
+* a json file to configure the python3 script [fp_docker_entrypoint_app_configuration.json].
 
 In the building part, the bash script is set using the ENTRYPOINT keyword; during the running part (if set in automatic mode),
 the container executes the bash script to run the python3 script with its configuration file.
@@ -367,13 +371,13 @@ networking, and its own isolated process tree separate from the host.
 
 In Flood-PROOFS virtualization, the running part can be activated in two configuration:
 
-	* Executable mode:
+* Executable mode:
 
 	.. code-block:: bash
 
 		>> ./fp-docker_runner.sh -f fp-docker_variables.env 
 
-	* Debug mode:
+* Debug mode:
 	
 	.. code-block:: bash
 
@@ -431,11 +435,8 @@ The structure of the container is reported below:
 	    │   ├── restart
 	    │   └── state
 	    ├── exec
-	    │   ├── fort.20
 	    │   ├── hmc.log
 	    │   ├── HMC_Model_V2_wrf_deterministic.x
-	    │   ├── HMC_Model_V2_wrf_deterministic.x_OLD
-	    │   ├── LogZip.txt
 	    │   └── marche.info.txt
 	    └── tmp
 
@@ -450,51 +451,51 @@ operational chain using the computing resources available in a cloud framework. 
 that will be implemented are defined as follow:
 
 * **fp_state_ws_observed**
+	
+	Simulation based on the weather station observations to generate the initial conditions of the 
+	Hydrological Model Continuum. The simulation covers the observed period.
 
-Simulation based on the weather station observations to generate the initial conditions of the 
-Hydrological Model Continuum. The simulation covers the observed period.
-
-- simulation_length_obs: 10 days
-- simulation_length_for: 0 days
-- simulation_domain_n: NA
-- simulation_type: deterministic
-- simulation_n: 1/day * simulation_domain
+	- simulation_length_obs: 10 days
+	- simulation_length_for: 0 days
+	- simulation_domain_n: NA
+	- simulation_type: deterministic
+	- simulation_n: 1/day * simulation_domain	
 
 * **fp_run_ws_observed**
-	
-Simulation based on the weather station observations to compute the time-series datasets (e.g discharge, 
-dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
-using the Hydrological Model Continuum. The simulation covers the observed period.
+		
+	Simulation based on the weather station observations to compute the time-series datasets (e.g discharge, 
+	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+	using the Hydrological Model Continuum. The simulation covers the observed period.
 
-- simulation_length_obs: 2 days
-- simulation_length_for: 0 days
-- simulation_domain_n: NA
-- simulation_type: deterministic
-- simulation_n: 1/day * simulation_domain
+	- simulation_length_obs: 2 days
+	- simulation_length_for: 0 days
+	- simulation_domain_n: NA
+	- simulation_type: deterministic
+	- simulation_n: 1/day * simulation_domain
 
 * **fp_run_nwp_deterministic**
 	
-Simulation based on the weather station observations and on the nwp datasets to compute the time-series datasets (e.g discharge, 
-dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
-using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+	Simulation based on the weather station observations and on the nwp datasets to compute the time-series datasets (e.g discharge, 
+	dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration and snow cover) 
+	using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
 
-- simulation_length_obs: 2 days
-- simulation_length_for: 2 days
-- simulation_domain_n: NA
-- simulation_type: deterministic
-- simulation_n: 1/day * simulation_domain
+	- simulation_length_obs: 2 days
+	- simulation_length_for: 2 days
+	- simulation_domain_n: NA
+	- simulation_type: deterministic
+	- simulation_n: 1/day * simulation_domain
 
 * **fp_run_nwp_probabilistic**	
   
-Simulation based on the weather station observations and on the perturbed and disaggregated nwp datasets to compute the 
-time-series datasets (e.g discharge, dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration 
-and snow cover) using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
+	Simulation based on the weather station observations and on the perturbed and disaggregated nwp datasets to compute the 
+	time-series datasets (e.g discharge, dams volume and level) and the spatial information (e.g. soil moisture, evapotranspiration 
+	and snow cover) using the Hydrological Model Continuum. The simulation covers both the observed and the forecasting periods.
 
-- simulation_length_obs: 2 days
-- simulation_length_for: 2 days
-- simulation_domain_n: NA
-- simulation_type: probabilistic
-- simulation_n: 30/day * simulation_domain
+	- simulation_length_obs: 2 days
+	- simulation_length_for: 2 days
+	- simulation_domain_n: NA
+	- simulation_type: probabilistic
+	- simulation_n: 30/day * simulation_domain
 
 * **fp_test**
 	
@@ -503,11 +504,13 @@ For testing each components of the operational chain, the users have to launch p
 * download the **docker_testcase** folders from the github repository;
 * create and update the fp-docker_variables.env file according with the host, the container and the simulation features; 
 * organize data in SOURCE folders; particularly, folders have to be organized as follows:
+
 		- SOURCE_DATA_STATIC='/docker_testcase/data/static_data/'
 		- SOURCE_DATA_RESTART='/docker_testcase/data/restart_data/'
 		- SOURCE_DATA_DYNAMIC_OBS='/docker_testcase/data/dynamic_data/observation/'
 		- SOURCE_DATA_DYNAMIC_FOR='/docker_testcase/data/dynamic_data/observation/'
 		- SOURCE_DATA_ARCHIVE='/docker_testcase/archive/'
+
 * building the image:
 
 .. code-block:: bash
