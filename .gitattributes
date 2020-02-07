@@ -1,0 +1,4 @@
+*.nc filter=lfs diff=lfs merge=lfs -text
+*.txt filter=lfs diff=lfs merge=lfs -text
+*.nc.gz filter=lfs diff=lfs merge=lfs -text
+docker_testcase/** filter=lfs diff=lfs merge=lfs -text
