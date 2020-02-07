@@ -16,7 +16,6 @@ python fp_docker_entrypoint_app_main.py -settings_file configuration.json
 # Complete library
 import logging
 import os
-import sys
 import subprocess
 import time
 import datetime

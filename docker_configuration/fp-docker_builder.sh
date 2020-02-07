@@ -30,7 +30,6 @@ echo " =========================================================================
 echo " ==> "$script_name" (Version: "$script_version" Release_Date: "$script_date")"
 echo " ==> START ..."
 
-
 # Get the script folder
 folder_root=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
