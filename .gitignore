@@ -61,4 +61,4 @@ target/
 
 # Data file
 *.nc
-*.txt
+#*.txt
