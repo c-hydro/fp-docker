@@ -556,12 +556,12 @@ If you want to contribute please follow these steps:
 Authors
 *******
 
-All authors involved in the docker development for FloodPROOFS system are reported in this authors_ file.
+All authors involved in the docker development for Flood-PROOFS system are reported in this authors_ file.
 
 License
 *******
 
-By accessing or using the FloodPROOFS modelling system, code, data or documentation, you agree to be bound by the FloodPROOFS license available. See the license_ for details. 
+By accessing or using the Flood-PROOFS modelling system, code, data or documentation, you agree to be bound by the Flood-PROOFS license available. See the license_ for details. 
 
 Changelog
 *********
