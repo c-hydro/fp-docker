@@ -1,5 +1,5 @@
 # start from base -- builder
-FROM ubuntu:18.10 as builder
+FROM ubuntu:18.04 as builder
 
 # label(s)
 LABEL maintainer="Fabio Delogu"
