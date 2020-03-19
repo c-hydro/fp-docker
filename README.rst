@@ -512,13 +512,13 @@ that will be implemented are defined as follow:
     
         .. code-block:: bash
         
-        	>> ./fp-docker_builder.sh -f fp-docker_variables.env
+        	>> ./fp-docker_builder.sh -f fp-docker_variables_hmc.env
     
     * running the container in executable mode:
     
         .. code-block:: bash
         
-        	>> ./fp-docker_runner.sh -f fp-docker_variables.env 
+        	>> ./fp-docker_runner.sh -f fp-docker_variables_hmc.env 
     
     * collect data in the SOURCE_DATA_ARCHIVE folders.
   
@@ -557,7 +557,7 @@ If you want to contribute please follow these steps:
 Authors
 *******
 
-All authors involved in the docker development for Flood-PROOFS system are reported in this authors_ file.
+All authors involved in the library development for Flood-PROOFS modelling system are reported in this authors_ file.
 
 License
 *******

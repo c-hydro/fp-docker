@@ -4,8 +4,8 @@ FROM ubuntu:19.04 as builder
 # label(s)
 LABEL maintainer="Fabio Delogu"
 LABEL email="fabio.delogu@cimafoundation.org"
-LABEL version="1.0.0"
-LABEL release_date="2020/02/04"
+LABEL version="1.0.1"
+LABEL release_date="2020/03/19"
 
 # change default shell (from sh to bash)
 SHELL ["/bin/bash", "-c"]
@@ -69,7 +69,7 @@ RUN ./setup_fp_env_hmc.sh ${fp_folder_libs_system} ${fp_file_env_system}
 # start installer script for python libraries
 WORKDIR ${fp_folder_libs_installer}
 RUN pwd
-#RUN ./setup_fp_env_python.sh ${fp_folder_libs_python} ${fp_file_env_python}
+RUN ./setup_fp_env_python.sh ${fp_folder_libs_python} ${fp_file_env_python}
 
 # set environmental variable(s) appending in .bashrc
 RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.bashrc
@@ -87,7 +87,7 @@ RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@git
 RUN cp -r /tmp/hmc/. ${fp_folder_package_hmc} 
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.0 --single-branch /tmp/fp-docker
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.1 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
