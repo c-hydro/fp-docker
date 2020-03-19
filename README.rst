@@ -546,6 +546,7 @@ Contribute and Guidelines
 We are happy if you want to contribute. Please raise an issue explaining what is missing or if you find a bug. We will also gladly accept pull requests against our master branch for new features or bug fixes.
 
 If you want to contribute please follow these steps:
+
     • fork the one of the Flood-PROOFS repositories to your account;
     • clone the repository, make sure you use "git clone --recursive" to also get the test data repository;
     • make a new feature branch from the repository master branch;
