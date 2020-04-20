@@ -54,9 +54,9 @@
   },
   "folder" : {
     "_comment": "folder(s) runner app definition in docker environment",
-    "folder_app_runner_main": "{run_path_root}/fp_package/fp_hyde/apps/wrf/",
-    "folder_app_runner_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/wrf/",
-    "folder_app_runner_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/wrf/lexis_docker/",
+    "folder_app_runner_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+    "folder_app_runner_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+    "folder_app_runner_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/",
     "folder_app_docker_log": "{run_path_root}/fp_logs/"
   },
   "lookup_table": {

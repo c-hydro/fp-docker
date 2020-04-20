@@ -4,6 +4,7 @@
 # Script Info
 # Convenience script for running the FP Docker container.
 # Example: sudo docker run -it --entrypoint bash c-hydro/fp_framework
+# docker run --env-file=fp-docker_variables_hyde.env -it --entrypoint bash c-hydro/fp_framework_hyde
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
@@ -13,7 +14,7 @@ script_version='1.0.0'
 script_date='2020/01/23'
 
 # Define coitainer envaironmente file (default)
-container_env_file_default='fp-docker_variables.env'
+container_env_file_default='fp-docker_variables_hyde.env'
 
 # Set script Help messages
 container_help_text="\
