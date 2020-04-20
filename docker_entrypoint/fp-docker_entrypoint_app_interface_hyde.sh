@@ -2,13 +2,13 @@
 
 # ----------------------------------------------------------------------------------------
 # Script information
-script_name='FP Docker Entrypoint - HMC Framework'
+script_name='FP Docker Entrypoint - HYDE Framework'
 script_version='1.0.0'
-script_date='2020/02/04'
+script_date='2020/04/18'
 
 # Argument(s) default definition(s)
-file_entrypoint_app_main_default='fp_docker_entrypoint_app_main.py'
-file_entrypoint_app_configuration_default='fp_docker_entrypoint_app_configuration.json'
+file_entrypoint_app_main_default='fp_docker_entrypoint_app_main_hyde.py'
+file_entrypoint_app_configuration_default='fp_docker_entrypoint_app_configuration_hyde.json'
 
 # Default script folder
 script_folder=$PWD

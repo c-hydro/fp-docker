@@ -20,7 +20,7 @@ container_help_text="\
 Usage of docker runner:
 ./fp-docker_runner.sh <options>
   	-h	display this help message;
-		-f	script environment filename;		
+	-f	script environment filename;		
   	-i	run the docker container interactively;"
 # ----------------------------------------------------------------------------------------
 

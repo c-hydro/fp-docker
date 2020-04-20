@@ -3,8 +3,8 @@
 """
 Flood-Proofs Docker Tool - Entrypoint App
 
-__date__ = '20200204'
-__version__ = '1.0.0'
+__date__ = '20200418'
+__version__ = '1.1.0'
 __author__ = 'Fabio Delogu (fabio.delogu@cimafoundation.org'
 __library__ = 'docker'
 
@@ -30,8 +30,8 @@ from argparse import ArgumentParser
 # -------------------------------------------------------------------------------------
 # Algorithm information
 alg_name = 'FP DOCKER TOOL - ENTRYPOINT APP'
-alg_version = '1.0.0'
-alg_release = '2020-01-31'
+alg_version = '1.1.0'
+alg_release = '2020-04-18'
 # Algorithm parameter(s)
 time_format = '%Y-%m-%d %H:%M'
 # -------------------------------------------------------------------------------------
@@ -69,12 +69,9 @@ def main():
     # Set algorithm logging
     set_logging(logger_file=run_files['file_app_docker_log'])
 
-    # Get parameters and data configuration file
-    file_parameters = run_files['file_app_runner_configuration_parameters_default']
-    file_data = run_files['file_app_runner_configuration_data_default']
-
-    run_parameters_default = read_file_json(file_parameters)
-    run_data_default = read_file_json(file_data)
+    # Get configuration file
+    file_configuration = run_files['file_app_runner_configuration_default']
+    run_configuration_default = read_file_json(file_configuration)
 
     run_lookup_table = run_settings_default['lookup_table']
     # -------------------------------------------------------------------------------------
@@ -93,17 +90,10 @@ def main():
     # -------------------------------------------------------------------------------------
     # Fill parameters file with run information
     logging.info(' ===> Define parameters file ... ')
-    run_parameters_def = merge_dict([run_variable, run_files, run_folders])
-    run_parameters_upd = fill_structure(run_parameters_default, run_parameters_def,
-                                        look_up_table=run_lookup_table['file_parameters'])
+    run_configuration_def = merge_dict([run_variable, run_files, run_folders])
+    run_configuration_upd = fill_structure(run_configuration_default, run_configuration_def,
+                                           look_up_table=run_lookup_table)
     logging.info(' ===> Define parameters file ... OK')
-
-    # Fill datasets file with run information
-    logging.info(' ===> Define datasets file ... ')
-    run_data_def = merge_dict([run_variable, run_files, run_folders])
-    run_data_upd = fill_structure(run_data_default, run_data_def,
-                                  look_up_table=run_lookup_table['file_data'])
-    logging.info(' ===> Define datasets file ... OK')
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
@@ -115,17 +105,11 @@ def main():
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
-    # Write parameters file in json format
-    logging.info(' ===> Write parameters structure ... ')
-    file_run_app_parameters = run_files['file_app_runner_configuration_parameters_custom']
-    write_file_json(file_run_app_parameters, run_parameters_upd)
-    logging.info(' ===> Write parameters structure ... OK')
-
-    # Write datasets file in json format
-    logging.info(' ===> Write datasets file ... ')
-    file_run_app_data = run_files['file_app_runner_configuration_data_custom']
-    write_file_json(file_run_app_data, run_data_upd)
-    logging.info(' ===> Write datasets file ... OK')
+    # Write configuration file in json format
+    logging.info(' ===> Write configuration structure ... ')
+    file_run_app_configuration = run_files['file_app_runner_configuration_custom']
+    write_file_json(file_run_app_configuration, run_configuration_upd)
+    logging.info(' ===> Write configuration structure ... OK')
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------

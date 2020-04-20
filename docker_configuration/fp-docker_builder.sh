@@ -21,7 +21,7 @@ container_help_text="\
 Usage of docker builder:
 ./fp-docker_builder.sh <options>
   	-h	display this help message;
-		-f	script environment filename"
+	-f	script environment filename"
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------

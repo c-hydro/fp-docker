@@ -1,11 +1,11 @@
 # start from base -- builder
-FROM ubuntu:19.04 as builder
+FROM ubuntu:18.04 as builder
 
 # label(s)
 LABEL maintainer="Fabio Delogu"
 LABEL email="fabio.delogu@cimafoundation.org"
-LABEL version="1.0.1"
-LABEL release_date="2020/03/19"
+LABEL version="1.0.2"
+LABEL release_date="2020/04/19"
 
 # change default shell (from sh to bash)
 SHELL ["/bin/bash", "-c"]
@@ -38,7 +38,7 @@ ENV fp_folder_entrypoint /home/fp/fp_entrypoint/
 ENV fp_folder_libs_installer /home/fp/fp_envs/fp_libs_installer/
 ENV fp_folder_libs_system /home/fp/fp_envs/fp_libs_system/
 ENV fp_folder_libs_python /home/fp/fp_envs/fp_libs_python/
-ENV fp_folder_package_hmc /home/fp/fp_package/fp_hmc/
+ENV fp_folder_package_fp_hyde /home/fp/fp_package/fp_hyde/
 ENV fp_folder_mount /home/fp/fp_mount/
 
 # set environment filename(s)
@@ -47,7 +47,7 @@ ENV fp_file_env_python fp_env_python
 
 # create folder
 RUN mkdir -p ${fp_folder_libs_installer}
-RUN mkdir -p ${fp_folder_package_hmc}
+RUN mkdir -p ${fp_folder_package_fp_hyde}
 RUN mkdir -p ${fp_folder_entrypoint}
 RUN mkdir -p ${fp_folder_mount}
 
@@ -56,38 +56,26 @@ RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@git
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-envs/. ${fp_folder_libs_installer} 
 
-# start installer script for system libraries
-WORKDIR ${fp_folder_libs_installer}
-RUN pwd
-RUN ./setup_fp_env_system.sh ${fp_folder_libs_system} ${fp_file_env_system}
-
-# start installer script for hmc libraries
-WORKDIR ${fp_folder_libs_installer}
-RUN pwd
-RUN ./setup_fp_env_hmc.sh ${fp_folder_libs_system} ${fp_file_env_system}
-
 # start installer script for python libraries
 WORKDIR ${fp_folder_libs_installer}
 RUN pwd
-#RUN ./setup_fp_env_python.sh ${fp_folder_libs_python} ${fp_file_env_python}
+RUN ./setup_fp_env_python.sh ${fp_folder_libs_python} ${fp_file_env_python}
 
 # set environmental variable(s) appending in .bashrc
-RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.bashrc
 RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.bashrc
-RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.bashrc
+RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_fp_hyde}" >> /home/fp/.bashrc
 # set environmental variable(s) appending in .profile
-RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.profile
 RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
-RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
+RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_fp_hyde}" >> /home/fp/.profile
 
 # get hmc python package from github repository
 WORKDIR ${fp_folder_entrypoint}
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.6 --single-branch /tmp/hmc
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-hyde.git --branch v1.9.4 --single-branch /tmp/fp_hyde
 # copy files from tmp to container folder(s)
-RUN cp -r /tmp/hmc/. ${fp_folder_package_hmc} 
+RUN cp -r /tmp/fp_hyde/. ${fp_folder_package_fp_hyde} 
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.0 --single-branch /tmp/fp-docker
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.1 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
