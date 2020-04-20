@@ -1,11 +1,11 @@
 # start from base -- builder
-FROM ubuntu:19.04 as builder
+FROM ubuntu:18.04 as builder
 
 # label(s)
 LABEL maintainer="Fabio Delogu"
 LABEL email="fabio.delogu@cimafoundation.org"
-LABEL version="1.0.1"
-LABEL release_date="2020/03/19"
+LABEL version="1.0.2"
+LABEL release_date="2020/04/19"
 
 # change default shell (from sh to bash)
 SHELL ["/bin/bash", "-c"]
