@@ -7,8 +7,8 @@ script_version='1.0.0'
 script_date='2020/02/04'
 
 # Argument(s) default definition(s)
-file_entrypoint_app_main_default='fp_docker_entrypoint_app_main.py'
-file_entrypoint_app_configuration_default='fp_docker_entrypoint_app_configuration.json'
+file_entrypoint_app_main_default='fp_docker_entrypoint_app_main_hmc.py'
+file_entrypoint_app_configuration_default='fp_docker_entrypoint_app_configuration_hmc.json'
 
 # Default script folder
 script_folder=$PWD

@@ -13,10 +13,8 @@
       "run_time_step_obs": "RUN_TIME_STEPS_OBS",
       "run_time_step_for": "RUN_TIME_STEPS_FOR",
       "run_mount_folder_static": "TARGET_DATA_STATIC",
-      "run_mount_folder_dynamic_forcing_obs_raw": "TARGET_DATA_DYNAMIC_OBS_RAW",
-      "run_mount_folder_dynamic_forcing_for_raw": "TARGET_DATA_DYNAMIC_FOR_RAW",
-      "run_mount_folder_dynamic_forcing_obs_processed": "TARGET_DATA_DYNAMIC_OBS_PROCESSED",
-      "run_mount_folder_dynamic_forcing_for_processed": "TARGET_DATA_DYNAMIC_FOR_PROCESSED"
+      "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+      "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
     },
     "local_variable": {
       "run_domain": "marche",

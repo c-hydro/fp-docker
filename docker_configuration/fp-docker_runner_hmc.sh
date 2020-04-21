@@ -1,27 +1,28 @@
-
 #!/bin/bash
 
 # ----------------------------------------------------------------------------------------
 # Script Info
-# Convenience script for building a docker image
-# Example: docker build -t c-hydro/fp_framework .
+# Convenience script for running the FP Docker container.
+# Example:
+# docker run --env-file=fp-docker_variables_hmc.env -it --entrypoint bash c-hydro/fp_framework_hmc
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
 # Script information
-script_name='FP Docker Builder - Packages Framework'
+script_name='FP Docker Runner - HMC Framework'
 script_version='1.0.0'
-script_date='2020/01/31'
+script_date='2020/01/23'
 
 # Define coitainer envaironmente file (default)
-container_env_file_default='fp-docker_variables.env'
+container_env_file_default='fp-docker_variables_hmc.env'
 
 # Set script Help messages
 container_help_text="\
-Usage of docker builder:
-./fp-docker_builder.sh <options>
+Usage of docker runner:
+./fp-docker_runner.sh <options>
   	-h	display this help message;
-	-f	script environment filename"
+	-f	script environment filename;		
+  	-i	run the docker container interactively;"
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
@@ -30,13 +31,14 @@ echo " =========================================================================
 echo " ==> "$script_name" (Version: "$script_version" Release_Date: "$script_date")"
 echo " ==> START ..."
 
-# Get the script folder
-folder_root=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 # Define script option(s)
 echo " ===> Get script parameters ... "
 while [ -n "$1" ]; do
 	case "$1" in
+		-i) 	# script runs the container interactively:
+      		container_extra_opts='-it --entrypoint=bash'
+			flag_mode_interactive=true
+      		;;
     	-h) 	# script calls help comment
       		echo "$container_help_text"			
       		exit 0
@@ -59,6 +61,14 @@ echo " ===> Get script parameters ... OK"
 
 # ----------------------------------------------------------------------------------------
 # Get environment filename
+echo " ===> Set container mode ... "
+if [ $flag_mode_interactive ] ; then
+	echo " ===> Set container mode ... INTERACTIVE"
+else
+	echo " ===> Set container mode ... AUTOMATIC"
+fi
+
+# Get environment filename
 echo " ===> Get environment filename ... "
 if [ $flag_env_file ] ; then
 	container_env_file=$container_env_file_pass
@@ -67,7 +77,9 @@ else
 	container_env_file=$container_env_file_default
 	echo " ===> Get environment filename [$container_env_file] ... OK (default definition)"
 fi
+# ----------------------------------------------------------------------------------------
 
+# ----------------------------------------------------------------------------------------
 # Source environment filename
 echo " ===> Source environment filename  ... "
 if [ -f "$container_env_file" ]; then
@@ -86,15 +98,21 @@ fi
 # ----------------------------------------------------------------------------------------
 # Define full name of image
 image_full_name="${image_base_name}/${image_app_name}"
-# Info start
-echo echo " ===> BUILD $image_full_name ... "
+# Info 
+echo echo " ===> Run $image_full_name "
 
-# Build docker
-echo " ===> Build as: docker build "${image_repository}" -f ${image_app_file} -t "${image_full_name}:${image_version}" . "
-docker build ${image_repository} -f ${image_app_file} -t ${image_full_name}:${image_version} .
-
-# Info end
-echo echo " ===> BUILD $image_full_name ... OK"
+# Run docker
+docker run ${container_extra_opts}\
+ 	--workdir ${container_workdir}\
+ 	--name ${container_name}\
+ 	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
+ 	--rm\
+ 	--env-file ${container_env_file}\
+ 	--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
+ 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_OBS},target=${TARGET_DATA_DYNAMIC_OBS}\
+	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_FOR},target=${TARGET_DATA_DYNAMIC_FOR}\
+ 	--mount type=bind,source=${SOURCE_DATA_ARCHIVE},target=${TARGET_DATA_ARCHIVE}\
+ 	${image_full_name}:${image_version}
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
@@ -104,4 +122,3 @@ echo " ==> ... END"
 echo " ==> Bye, Bye"
 echo " ==================================================================================="
 # ----------------------------------------------------------------------------------------
-
