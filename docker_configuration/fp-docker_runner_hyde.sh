@@ -3,15 +3,15 @@
 # ----------------------------------------------------------------------------------------
 # Script Info
 # Convenience script for running the FP Docker container.
-# Example: sudo docker run -it --entrypoint bash c-hydro/fp_framework
+# Example: 
 # docker run --env-file=fp-docker_variables_hyde.env -it --entrypoint bash c-hydro/fp_framework_hyde
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
 # Script information
-script_name='FP Docker Runner - HMC Framework'
+script_name='FP Docker Runner - HYDE Framework'
 script_version='1.0.0'
-script_date='2020/01/23'
+script_date='2020/04/20'
 
 # Define coitainer envaironmente file (default)
 container_env_file_default='fp-docker_variables_hyde.env'
@@ -104,15 +104,14 @@ echo echo " ===> Run $image_full_name "
 # Run docker
 docker run ${container_extra_opts}\
  	--workdir ${container_workdir}\
- 	--name ${container_name}\
- 	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
+	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
  	--rm\
  	--env-file ${container_env_file}\
- 	--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_OBS},target=${TARGET_DATA_DYNAMIC_OBS}\
-	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_FOR},target=${TARGET_DATA_DYNAMIC_FOR}\
- 	--mount type=bind,source=${SOURCE_DATA_ARCHIVE},target=${TARGET_DATA_ARCHIVE}\
- 	${image_full_name}:${image_version}
+ 	 --mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
+ 	 --mount type=bind,source=${SOURCE_DATA_DYNAMIC_RAW},target=${TARGET_DATA_DYNAMIC_RAW}\
+	 --mount type=bind,source=${SOURCE_DATA_DYNAMIC_PROCESSED},target=${TARGET_DATA_DYNAMIC_PROCESSED}\
+	 ${image_full_name}:${image_version}
+ 	
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------

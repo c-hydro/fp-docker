@@ -9,7 +9,7 @@
 
 # ----------------------------------------------------------------------------------------
 # Script information
-script_name='FP Docker Builder - HMC Framework'
+script_name='FP Docker Builder - Packages Framework'
 script_version='1.0.0'
 script_date='2020/01/31'
 
