@@ -1,67 +1,133 @@
 {
-  "version": "1.1.0",
+  "version": "1.5.0",
+  "apps_name": ["runner", "adapter"],
   "tags": {
-    "run_domain": "string",
-    "run_name": "string",
-    "run_path_root": "string"
+    "runner": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "adapter": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    }
+  },
+  "log" : {
+    "_comment": "docker log file and folder definition",
+    "file_docker_log": "hyde_entrypoint_log_docker.txt",
+    "folder_docker_log": "{run_path_root}/fp_logs/"
   },
   "variable": {
     "_comment": "environment and local docker variable(s) definition",
-    "env_variable": {
-      "run_domain": "RUN_DOMAIN",
-      "run_time_now": "RUN_TIME_NOW",
-      "run_time_step_obs": "RUN_TIME_STEPS_OBS",
-      "run_time_step_for": "RUN_TIME_STEPS_FOR",
-      "run_mount_folder_static": "TARGET_DATA_STATIC",
-      "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
-      "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+    "runner": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "marche",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "marche.dem.txt",
+        "grid_data": "marche_grid_wrf.workspace",
+        "geo_data": "marche_geo_wrf.workspace"
+      }
     },
-    "local_variable": {
-      "run_domain": "marche",
-      "run_name": "wrf_deterministic_4_hmc",
-      "run_ens_mode": false,
-      "run_ens_var": "RFarm_ID",
-      "run_ens_min": 1,
-      "run_ens_max": 1,
-      "run_path_root": "/home/fp/",
-      "terrain_data" : "marche.dem.txt",
-      "grid_data": "marche_grid_wrf.workspace",
-      "geo_data": "marche_geo_wrf.workspace"
+    "adapter" : {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "marche",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data" : "marche.dem.txt",
+        "grid_data": "marche_grid_wrf.workspace",
+        "geo_data": "marche_geo_wrf.workspace"
+      }
     }
   },
   "cmd": {
     "_comment": "command line of defined application(s)",
-    "file_app_runner_exec": {
-      "script": ["file_app_runner_main"],
+    "runner": {
+      "script": ["file_app_main"],
       "args" : [{
-        "-settings_file":"file_app_runner_configuration_custom",
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "adapter": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
         "-time": "time"
       }]
     }
   },
   "app": {
     "_comment": "filename(s) runner app main n docker environment",
-    "file_app_runner_main": "HYDE_DynamicData_NWP_WRF.py"
+    "runner": {"file_app_main": "HYDE_DynamicData_NWP_WRF.py"},
+    "adapter": {"file_app_main": "hyde_adapter_data_splitting_main.py"}
   },
   "file" : {
     "_comment": "filename(s) runner app configuration(s) in docker environment",
-    "file_app_runner_configuration_default": "hyde_configuration_nwp_wrf_docker_default.json",
-    "file_app_runner_configuration_custom": "hyde_configuration_nwp_wrf_docker_custom.json",
-    "file_app_runner_log": "hyde_runner_log_docker.txt",
-    "file_app_docker_log": "hyde_adapter_log_docker.txt"
+    "runner": {
+      "file_app_configuration_default": "hyde_configuration_nwp_wrf_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_nwp_wrf_docker_custom.json",
+      "file_app_log": "hyde_runner_log_docker.txt"
+    },
+    "adapter": {
+      "file_app_configuration_default": "hyde_configuration_data_splitting_configuration_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_data_splitting_configuration_docker_custom.json",
+      "file_app_log": "hyde_adapter_log_docker.txt"
+    }
   },
   "folder" : {
     "_comment": "folder(s) runner app definition in docker environment",
-    "folder_app_runner_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
-    "folder_app_runner_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
-    "folder_app_runner_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/",
-    "folder_app_docker_log": "{run_path_root}/fp_logs/"
+    "runner": {
+      "folder_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/"
+    },
+    "adapter": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/lexis_docker/"
+    }
   },
   "lookup_table": {
     "_comment": "lookup table to update values in configurations file(s)",
-    "run_domain": ["algorithm","ancillary", "domain"],
-    "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
-    "grid_data": ["data", "static", "land", "grid_data", "filename"],
-    "geo_data": ["data", "static", "land", "geo_data", "filename"]
+    "runner": {
+      "run_domain": ["algorithm","ancillary", "domain"],
+      "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
+      "grid_data": ["data", "static", "land", "grid_data", "filename"],
+      "geo_data": ["data", "static", "land", "geo_data", "filename"]
+    },
+    "adapter": {
+      "run_domain": ["algorithm","ancillary", "domain"],
+      "terrain_data": ["data", "static", "land_ref", "filename"],
+      "grid_data": ["data", "static", "grid_ref", "filename"],
+      "geo_data": ["data", "static", "land_ancillary","filename"]
+    }
   }
 }
