@@ -54,6 +54,7 @@ def main():
     app_obj, log_obj = organize_apps(app_list, run_settings_default)
 
     # Set algorithm logging
+    make_folder([log_obj['folder_docker_log']])
     set_logging(logger_file=os.path.join(log_obj['folder_docker_log'], log_obj['file_docker_log']))
     # -------------------------------------------------------------------------------------
 
@@ -544,6 +545,7 @@ def set_logging(logger_file='log.txt', logger_format=None):
     # Remove old logging file
     if os.path.exists(logger_file):
         os.remove(logger_file)
+
 
     # Set level of root debugger
     logging.root.setLevel(logging.DEBUG)

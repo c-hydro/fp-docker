@@ -74,6 +74,8 @@ RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_fp_hyde}" >> 
 RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
 RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_fp_hyde}" >> /home/fp/.profile
 
+
+WORKDIR ${fp_folder_libs_installer}
 # get hmc python package from github repository
 RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-hyde.git --branch v1.9.4 --single-branch /tmp/fp_hyde
 # copy files from tmp to container folder(s)

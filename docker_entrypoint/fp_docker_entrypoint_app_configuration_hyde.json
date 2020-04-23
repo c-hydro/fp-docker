@@ -105,7 +105,7 @@
   "folder" : {
     "_comment": "folder(s) runner app definition in docker environment",
     "runner": {
-      "folder_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
       "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
       "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/"
     },
