@@ -10,8 +10,8 @@
 # ----------------------------------------------------------------------------------------
 # Script information
 script_name='FP Docker Runner - HMC Framework'
-script_version='1.0.0'
-script_date='2020/01/23'
+script_version='1.0.1'
+script_date='2020/04/23'
 
 # Define coitainer envaironmente file (default)
 container_env_file_default='fp-docker_variables_hmc.env'
@@ -108,10 +108,11 @@ docker run ${container_extra_opts}\
  	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
  	--rm\
  	--env-file ${container_env_file}\
- 	--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_OBS},target=${TARGET_DATA_DYNAMIC_OBS}\
-	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_FOR},target=${TARGET_DATA_DYNAMIC_FOR}\
- 	--mount type=bind,source=${SOURCE_DATA_ARCHIVE},target=${TARGET_DATA_ARCHIVE}\
+ 	--mount type=bind,source=${SOURCE_DATA_STATIC_LAND},target=${TARGET_DATA_STATIC_LAND}\
+	--mount type=bind,source=${SOURCE_DATA_STATIC_POINT},target=${TARGET_DATA_STATIC_POINT}\
+ 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_RESTART},target=${TARGET_DATA_DYNAMIC_RESTART}\
+	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_SOURCE},target=${TARGET_DATA_DYNAMIC_SOURCE}\
+ 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_ARCHIVE},target=${TARGET_DATA_DYNAMIC_ARCHIVE}\
  	${image_full_name}:${image_version}
 # ----------------------------------------------------------------------------------------
 

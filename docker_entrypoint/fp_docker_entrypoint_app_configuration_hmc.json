@@ -10,11 +10,11 @@
       "run_time_now": "RUN_TIME_NOW",
       "run_time_step_obs": "RUN_TIME_STEPS_OBS",
       "run_time_step_for": "RUN_TIME_STEPS_FOR",
-      "run_mount_folder_static": "TARGET_DATA_STATIC",
-      "run_mount_folder_restart": "TARGET_DATA_RESTART",
-      "run_mount_folder_dynamic_forcing_obs": "TARGET_DATA_DYNAMIC_OBS",
-      "run_mount_folder_dynamic_forcing_for": "TARGET_DATA_DYNAMIC_FOR",
-      "run_mount_folder_results": "TARGET_DATA_ARCHIVE"
+      "run_mount_folder_static_land": "TARGET_DATA_STATIC_LAND",
+      "run_mount_folder_static_point": "TARGET_DATA_STATIC_POINT",
+      "run_mount_folder_dynamic_restart": "TARGET_DATA_DYNAMIC_RESTART",
+      "run_mount_folder_dynamic_source": "TARGET_DATA_DYNAMIC_SOURCE",
+      "run_mount_folder_dynamic_archive": "TARGET_DATA_DYNAMIC_ARCHIVE"
     },
     "local_variable": {
       "run_domain": "marche",
@@ -23,7 +23,7 @@
       "run_ens_var": "RFarm_ID",
       "run_ens_min": 1,
       "run_ens_max": 12,
-      "run_path_root": null
+      "run_path_root": "/home/fp/"
     }
   },
   "cmd": {
@@ -73,8 +73,8 @@
     "folder_app_runner_main": "{run_path_root}/fp_package/fp_hmc/apps/",
     "folder_app_runner_configuration_parameters_custom": "{run_path_root}/fp_package/fp_hmc/apps/",
     "folder_app_runner_configuration_data_custom": "{run_path_root}/fp_package/fp_hmc/apps/",
-    "folder_app_runner_configuration_parameters_default": "{run_path_root}/fp_package/fp_hmc/apps/lexis/",
-    "folder_app_runner_configuration_data_default": "{run_path_root}/fp_package/fp_hmc/apps/lexis/",
+    "folder_app_runner_configuration_parameters_default": "{run_path_root}/fp_package/fp_hmc/apps/lexis_docker/",
+    "folder_app_runner_configuration_data_default": "{run_path_root}/fp_package/fp_hmc/apps/lexis_docker/",
     "folder_app_runner_log": "{run_path_root}/fp_logs/",
     "folder_app_docker_log": "{run_path_root}/fp_logs/"
   },

@@ -3,8 +3,8 @@
 """
 Flood-Proofs Docker Tool - Entrypoint App
 
-__date__ = '20200204'
-__version__ = '1.0.0'
+__date__ = '20200423'
+__version__ = '1.0.1'
 __author__ = 'Fabio Delogu (fabio.delogu@cimafoundation.org'
 __library__ = 'docker'
 
@@ -30,8 +30,8 @@ from argparse import ArgumentParser
 # -------------------------------------------------------------------------------------
 # Algorithm information
 alg_name = 'FP DOCKER TOOL - ENTRYPOINT APP'
-alg_version = '1.0.0'
-alg_release = '2020-01-31'
+alg_version = '1.0.1'
+alg_release = '2020-04-23'
 # Algorithm parameter(s)
 time_format = '%Y-%m-%d %H:%M'
 # -------------------------------------------------------------------------------------
