@@ -81,6 +81,8 @@ def main():
         run_variable = get_variable(var_group_envs=app_frame['variable']['env_variable'],
                                     var_group_local=app_frame['variable']['local_variable'],
                                     run_path_root_default=os.path.dirname(os.path.realpath(__file__)))
+        # Get lookup table
+        run_lookup_table = app_frame['lookup_table']
 
         # Get file and folder(s)
         run_tags = app_frame['tags']
@@ -98,8 +100,6 @@ def main():
         # Get configuration file
         file_configuration = run_files['file_app_configuration_default']
         run_configuration_default = read_file_json(file_configuration)
-        # Get lookup table
-        run_lookup_table = run_settings_default['lookup_table']
         # -------------------------------------------------------------------------------------
 
         # -------------------------------------------------------------------------------------
