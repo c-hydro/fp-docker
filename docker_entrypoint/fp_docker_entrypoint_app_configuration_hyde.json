@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "apps_name": ["runner", "adapter"],
+  "apps_name": ["runner"],
   "tags": {
     "runner": {
       "run_domain": "string",
