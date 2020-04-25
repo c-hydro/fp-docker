@@ -486,7 +486,7 @@ that will be implemented are defined as follow:
 	- simulation_type: probabilistic
 	- simulation_n: 30/day * simulation_domain
 
-* **fp_test_nwp_deterministic*
+* **fp_test_nwp_deterministic**
 
     For testing each components of the operational chain, the users have to set the test case based on an
 	example of nwp deterministic run.
@@ -500,100 +500,99 @@ that will be implemented are defined as follow:
     * download the **docker_testcase** folders from the github repository [1_];
     * create and update the **fp-docker_variables_hmc.env** and **fp-docker_variables_hyde.env** files according with the host, the containers and the simulation features.
 
-	1. The Hyde Docker has to be prepared and run following the steps below:
+	The **Hyde Docker** has to be prepared and run following the steps below:
 
-		a) configuring the folders and the parameters in the fp-docker_variables_hyde.env file:
+	a) configuring the folders and the parameters in the fp-docker_variables_hyde.env file:
 
-			- SOURCE_DATA_STATIC='/docker_testcase/datasets_hyde/data/static_data/land/'
-			- SOURCE_DATA_DYNAMIC_RAW='/docker_testcase/datasets_hyde/dynamic_data/nwp/'
-			- SOURCE_DATA_DYNAMIC_PROCESSED='/docker_testcase/datasets_hyde/docker_data/'
-			- RUN_TIME_NOW=2020-03-20 00:00					
-			- RUN_TIME_STEPS_OBS=10
-			- RUN_TIME_STEPS_FOR=20
-			- RUN_NAME='fp_hyde_wrf'
-			- RUN_DOMAIN='marche'
-			- RUN_ENS=false
+	- SOURCE_DATA_STATIC='/docker_testcase/datasets_hyde/data/static_data/land/'
+	- SOURCE_DATA_DYNAMIC_RAW='/docker_testcase/datasets_hyde/dynamic_data/nwp/'
+	- SOURCE_DATA_DYNAMIC_PROCESSED='/docker_testcase/datasets_hyde/docker_data/'
+	- RUN_TIME_NOW=2020-03-20 00:00					
+	- RUN_TIME_STEPS_OBS=10
+	- RUN_TIME_STEPS_FOR=20
+	- RUN_NAME='fp_hyde_wrf'
+	- RUN_DOMAIN='marche'
+	- RUN_ENS=false
 
-		b) building the image:
+	b) building the image:
+	
+	.. code-block:: bash
+	
+		>> 	./fp-docker_builder.sh -f fp-docker_variables_hyde.env
 		
-			.. code-block:: bash
-			
-				>> ./fp-docker_builder.sh -f fp-docker_variables_hyde.env
+	c) running the container in executable mode:
+	
+	.. code-block:: bash
+	
+		>> 	./fp-docker_runner_hyde.sh -f fp-docker_variables_hyde.env 
+
+	d) collecting the datasets in the SOURCE_DATA_DYNAMIC_ARCHIVE folder of the Hyde docker and copy it to the source folder SOURCE_DATA_DYNAMIC_SOURCE of the HMC docker:
+
+	.. code-block:: bash
+
+		>> 	cp /docker_testcase/datasets_hmc/dynamic_data/wrf_{date_outcome_string}_{domain_string}.nc.gz /docker_testcase/datasets_hmc/dynamic_data/'
 		
-		c) running the container in executable mode:
+	If the users need to open the Hyde Docker in interctive mode, they can use the follow command-line:
+
+	.. code-block:: bash
+
+		>> 	docker run --workdir /home/fp/fp_entrypoint/\ 
+			-e APP_MAIN=fp_docker_entrypoint_app_main_hyde.py -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hyde.json\
+			--rm  --env-file fp-docker_variables_hyde.env\
+			-it --entrypoint bash  
+			--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
+			--mount type=bind,source=${SOURCE_DATA_DYNAMIC_RAW},target=${TARGET_DATA_DYNAMIC_RAW}\
+			--mount type=bind,source=${SOURCE_DATA_DYNAMIC_PROCESSED},target=${TARGET_DATA_DYNAMIC_PROCESSED}\  
+			c-hydro/fp_framework_hyde
+
+	The **HMC Docker** has to be prepared and run following the steps below:
+
+	a) configuring the folders and the parameters in the fp-docker_variables_hmc.env file:
+
+	- SOURCE_DATA_STATIC_LAND='/docker_testcase/datasets_hmc/static_data/land/'
+	- SOURCE_DATA_STATIC_POINT='/docker_testcase/datasets_hmc/static_data/point/'
+	- SOURCE_DATA_DYNAMIC_SOURCE='/docker_testcase/datasets_hmc/dynamic_data/'
+	- SOURCE_DATA_DYNAMIC_RESTART='/docker_testcase/datasets_hmc/dynamic_restart/'
+	- SOURCE_DATA_DYNAMIC_ARCHIVE='/docker_testcase/datasets_hmc/docker_data/'
+	- RUN_TIME_NOW=2020-03-20 00:00					
+	- RUN_TIME_STEPS_OBS=10
+	- RUN_TIME_STEPS_FOR=15
+	- RUN_NAME='fp_run'
+	- RUN_ENS=false
 		
-			.. code-block:: bash
-			
-				>> ./fp-docker_runner_hyde.sh -f fp-docker_variables_hyde.env 
+	The users have to be check that the dynamic datasets are in the SOURCE_DATA_DYNAMIC_SOURCE. Particularly:
 
-		d) collecting the datasets in the SOURCE_DATA_DYNAMIC_ARCHIVE folder of the Hyde docker and copy it to the 
-		source folder SOURCE_DATA_DYNAMIC_SOURCE of the HMC docker:
+	- the wrf datasets elaborated by the Hyde Docker;
+	- the observed datasets for the previous 24 hours available on the **docker_testcase** folders hosted by github.
 
-			.. code-block:: bash
-
-				>> cp /docker_testcase/datasets_hmc/dynamic_data/wrf_{date_outcome_string}_{domain_string}.nc.gz /docker_testcase/datasets_hmc/dynamic_data/'
+	b) building the image:
+	
+	.. code-block:: bash
+	
+		>>	./fp-docker_builder.sh -f fp-docker_variables_hmc.env
 		
-		If the users need to open the Hyde Docker in interctive mode, they can use the follow command-line:
+	c) running the container in executable mode:
+	
+	.. code-block:: bash
+	
+		>>	./fp-docker_runner_hmc.sh -f fp-docker_variables_hmc.env 
 
-			.. code-block:: bash
+	d) collecting the results of the Continuum hydrological model in the SOURCE_DATA_DYNAMIC_ARCHIVE.
 
-				>> docker run --workdir /home/fp/fp_entrypoint/\ 
-				   -e APP_MAIN=fp_docker_entrypoint_app_main_hyde.py -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hyde.json\
-				   --rm  --env-file fp-docker_variables_hyde.env\
-				   -it --entrypoint bash  
-				   --mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
-				   --mount type=bind,source=${SOURCE_DATA_DYNAMIC_RAW},target=${TARGET_DATA_DYNAMIC_RAW}\
-				   --mount type=bind,source=${SOURCE_DATA_DYNAMIC_PROCESSED},target=${TARGET_DATA_DYNAMIC_PROCESSED}\  
-				   c-hydro/fp_framework_hyde
+	If the users need to open the HMC Docker in interctive mode, they can use the follow command-line:
 
-	2. The HMC Docker has to be prepared and run following the steps below:
+	.. code-block:: bash
 
-		a) configuring the folders and the parameters in the fp-docker_variables_hmc.env file:
-
-			- SOURCE_DATA_STATIC_LAND='/docker_testcase/datasets_hmc/static_data/land/'
-			- SOURCE_DATA_STATIC_POINT='/docker_testcase/datasets_hmc/static_data/point/'
-			- SOURCE_DATA_DYNAMIC_SOURCE='/docker_testcase/datasets_hmc/dynamic_data/'
-			- SOURCE_DATA_DYNAMIC_RESTART='/docker_testcase/datasets_hmc/dynamic_restart/'
-			- SOURCE_DATA_DYNAMIC_ARCHIVE='/docker_testcase/datasets_hmc/docker_data/'
-			- RUN_TIME_NOW=2020-03-20 00:00					
-			- RUN_TIME_STEPS_OBS=10
-			- RUN_TIME_STEPS_FOR=15
-			- RUN_NAME='fp_run'
-			- RUN_ENS=false
-		
-		The users have to be check that the dynamic datasets are in the SOURCE_DATA_DYNAMIC_SOURCE. Particularly:
-
-			- the wrf datasets elaborated by the Hyde Docker;
-			- the observed datasets for the previous 24 hours available on the **docker_testcase** folders hosted by github.
-
-		b) building the image:
-		
-			.. code-block:: bash
-			
-				>> ./fp-docker_builder.sh -f fp-docker_variables_hmc.env
-		
-		c) running the container in executable mode:
-		
-			.. code-block:: bash
-			
-				>> ./fp-docker_runner_hmc.sh -f fp-docker_variables_hmc.env 
-
-		d) collecting the results of the Continuum hydrological model in the SOURCE_DATA_DYNAMIC_ARCHIVE.
-
-		If the users need to open the HMC Docker in interctive mode, they can use the follow command-line:
-
-			.. code-block:: bash
-
-				>> docker run --workdir /home/fp/fp_entrypoint/\ 
-				   -e APP_MAIN=fp_docker_entrypoint_app_main_hmc.py -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc.json\
-				   --rm  --env-file fp-docker_variables_hmc.env\
-				   -it --entrypoint bash\
-				   --mount type=bind,source=${SOURCE_DATA_STATIC_LAND},target=${TARGET_DATA_STATIC_LAND}\
-				   --mount type=bind,source=${SOURCE_DATA_STATIC_POINT},target=${TARGET_DATA_STATIC_POINT}\
-				   --mount type=bind,source=${SOURCE_DATA_DYNAMIC_RESTART},target=${TARGET_DATA_DYNAMIC_RESTART}\
-				   --mount type=bind,source=${SOURCE_DATA_DYNAMIC_SOURCE},target=${TARGET_DATA_DYNAMIC_SOURCE}\ 
-				   --mount type=bind,source=${SOURCE_DATA_DYNAMIC_ARCHIVE},target=${TARGET_DATA_DYNAMIC_ARCHIVE}\ 
-				   c-hydro/fp_framework_hmc
+		>> 	docker run --workdir /home/fp/fp_entrypoint/\ 
+			-e APP_MAIN=fp_docker_entrypoint_app_main_hmc.py -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc.json\
+			--rm  --env-file fp-docker_variables_hmc.env\
+			-it --entrypoint bash\
+			--mount type=bind,source=${SOURCE_DATA_STATIC_LAND},target=${TARGET_DATA_STATIC_LAND}\
+			--mount type=bind,source=${SOURCE_DATA_STATIC_POINT},target=${TARGET_DATA_STATIC_POINT}\
+			--mount type=bind,source=${SOURCE_DATA_DYNAMIC_RESTART},target=${TARGET_DATA_DYNAMIC_RESTART}\
+			--mount type=bind,source=${SOURCE_DATA_DYNAMIC_SOURCE},target=${TARGET_DATA_DYNAMIC_SOURCE}\ 
+			--mount type=bind,source=${SOURCE_DATA_DYNAMIC_ARCHIVE},target=${TARGET_DATA_DYNAMIC_ARCHIVE}\ 
+			c-hydro/fp_framework_hmc
 
 Potential Users
 ***************
