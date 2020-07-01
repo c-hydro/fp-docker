@@ -4,8 +4,8 @@ FROM ubuntu:18.04 as builder
 # label(s)
 LABEL maintainer="Fabio Delogu"
 LABEL email="fabio.delogu@cimafoundation.org"
-LABEL version="1.0.2"
-LABEL release_date="2020/04/19"
+LABEL version="1.0.3"
+LABEL release_date="2020/06/30"
 
 # change default shell (from sh to bash)
 SHELL ["/bin/bash", "-c"]
@@ -58,7 +58,7 @@ RUN mkdir -p ${fp_folder_entrypoint}
 RUN mkdir -p ${fp_folder_mount}
 
 # get fp envs from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-envs.git --branch v1.5.3 --single-branch /tmp/fp-envs
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-envs.git --branch v1.5.5 --single-branch /tmp/fp-envs
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-envs/. ${fp_folder_libs_installer} 
 
@@ -75,12 +75,12 @@ RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.pr
 RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_fp_hyde}" >> /home/fp/.profile
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-hyde.git --branch v1.9.4 --single-branch /tmp/fp_hyde
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-hyde.git --branch v1.9.5 --single-branch /tmp/fp_hyde
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp_hyde/. ${fp_folder_package_fp_hyde} 
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.2 --single-branch /tmp/fp-docker
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.3 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 

@@ -1,13 +1,23 @@
 {
-  "version": "1.5.0",
-  "apps_name": ["runner"],
+  "version": "1.6.0",
+  "apps_name": ["ws_downloader","ws_runner", "nwp_runner"],
   "tags": {
-    "runner": {
+    "ws_downloader": {
       "run_domain": "string",
       "run_name": "string",
       "run_path_root": "string"
     },
-    "adapter": {
+    "ws_runner": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "nwp_runner": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "nwp_adapter": {
       "run_domain": "string",
       "run_name": "string",
       "run_path_root": "string"
@@ -20,7 +30,7 @@
   },
   "variable": {
     "_comment": "environment and local docker variable(s) definition",
-    "runner": {
+    "ws_downloader": {
       "env_variable": {
         "run_domain": "RUN_DOMAIN",
         "run_time_now": "RUN_TIME_NOW",
@@ -43,7 +53,53 @@
         "geo_data": "marche_geo_wrf.workspace"
       }
     },
-    "adapter" : {
+    "ws_runner": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "marche",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "marche.dem.txt",
+        "grid_data": "marche_grid_wrf.workspace",
+        "geo_data": "marche_geo_wrf.workspace"
+      }
+    },
+    "nwp_runner": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "marche",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "marche.dem.txt",
+        "grid_data": "marche_grid_wrf.workspace",
+        "geo_data": "marche_geo_wrf.workspace"
+      }
+    },
+    "nwp_adapter" : {
       "env_variable": {
         "run_domain": "RUN_DOMAIN",
         "run_time_now": "RUN_TIME_NOW",
@@ -69,14 +125,28 @@
   },
   "cmd": {
     "_comment": "command line of defined application(s)",
-    "runner": {
+    "ws_downloader": {
       "script": ["file_app_main"],
       "args" : [{
         "-settings_file":"file_app_configuration_custom",
         "-time": "time"
       }]
     },
-    "adapter": {
+    "ws_runner": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "nwp_runner": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "nwp_adapter": {
       "script": ["file_app_main"],
       "args" : [{
         "-settings_file":"file_app_configuration_custom",
@@ -86,44 +156,74 @@
   },
   "app": {
     "_comment": "filename(s) runner app main n docker environment",
-    "runner": {"file_app_main": "HYDE_DynamicData_NWP_WRF.py"},
-    "adapter": {"file_app_main": "hyde_adapter_data_splitting_main.py"}
+    "ws_downloader": {"file_app_main": "hyde_downloader_drops2_ws.py"},
+    "ws_runner": {"file_app_main": "HYDE_DynamicData_GroundNetwork_WS.py"},
+    "nwp_runner": {"file_app_main": "HYDE_DynamicData_NWP_WRF.py"},
+    "nwp_adapter": {"file_app_main": "hyde_adapter_data_splitting_main.py"}
   },
   "file" : {
     "_comment": "filename(s) runner app configuration(s) in docker environment",
-    "runner": {
+    "ws_downloader": {
+      "file_app_configuration_default": "hyde_configuration_downloader_ws_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_downloader_ws_docker_custom.json",
+      "file_app_log": "hyde_ws_downloader_log_docker.txt"
+    },
+    "ws_runner": {
+      "file_app_configuration_default": "hyde_configuration_runner_ws_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_runner_ws_docker_custom.json",
+      "file_app_log": "hyde_ws_runner_log_docker.txt"
+    },
+    "nwp_runner": {
       "file_app_configuration_default": "hyde_configuration_nwp_wrf_docker_default.json",
       "file_app_configuration_custom": "hyde_configuration_nwp_wrf_docker_custom.json",
-      "file_app_log": "hyde_runner_log_docker.txt"
+      "file_app_log": "hyde_nwp_runner_log_docker.txt"
     },
-    "adapter": {
-      "file_app_configuration_default": "hyde_configuration_data_splitting_configuration_docker_default.json",
-      "file_app_configuration_custom": "hyde_configuration_data_splitting_configuration_docker_custom.json",
-      "file_app_log": "hyde_adapter_log_docker.txt"
+    "nwp_adapter": {
+      "file_app_configuration_default": "hyde_configuration_data_splitting_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_data_splitting_docker_custom.json",
+      "file_app_log": "hyde_nwp_adapter_log_docker.txt"
     }
   },
   "folder" : {
     "_comment": "folder(s) runner app definition in docker environment",
-    "runner": {
+    "ws_downloader": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/lexis_docker/"
+    },
+    "ws_runner": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/lexis_docker/"
+    },
+    "nwp_runner": {
       "folder_app_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
       "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
       "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/"
     },
-    "adapter": {
+    "nwp_adapter": {
       "folder_app_main": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
       "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
       "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/lexis_docker/"
     }
   },
   "lookup_table": {
-    "_comment": "lookup table to update values in configurations file(s)",
-    "runner": {
+    "_comment": "lookup table to update values in configurations file(s) [VAR_ENV 2 JSON]",
+    "ws_downloader": {
+      "run_time_step_obs": ["time","time_period"],
+      "terrain_data": ["data", "static", "land", "file_name"]
+    },
+    "ws_runner": {
+      "run_time_step_obs": ["data", "dynamic", "time", "time_observed_step"],
+      "terrain_data": ["data", "static", "land", "file_name"]
+    },
+    "nwp_runner": {
       "run_domain": ["algorithm","ancillary", "domain"],
       "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
       "grid_data": ["data", "static", "land", "grid_data", "filename"],
       "geo_data": ["data", "static", "land", "geo_data", "filename"]
     },
-    "adapter": {
+    "nwp_adapter": {
       "run_domain": ["algorithm","ancillary", "domain"],
       "terrain_data": ["data", "static", "land_ref", "filename"],
       "grid_data": ["data", "static", "grid_ref", "filename"],

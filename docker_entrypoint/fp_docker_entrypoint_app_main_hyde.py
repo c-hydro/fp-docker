@@ -31,8 +31,8 @@ from argparse import ArgumentParser
 # -------------------------------------------------------------------------------------
 # Algorithm information
 alg_name = 'FP DOCKER TOOL - ENTRYPOINT APP'
-alg_version = '1.5.0'
-alg_release = '2020-04-22'
+alg_version = '1.6.0'
+alg_release = '2020-06-29'
 # Algorithm parameter(s)
 time_format = '%Y-%m-%d %H:%M'
 # -------------------------------------------------------------------------------------
