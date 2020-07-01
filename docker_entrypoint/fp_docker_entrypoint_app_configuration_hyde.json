@@ -218,6 +218,7 @@
       "terrain_data": ["data", "static", "land", "file_name"]
     },
     "nwp_runner": {
+      "run_time_step_for": ["data", "dynamic", "time", "time_forecast_period"],
       "run_domain": ["algorithm","ancillary", "domain"],
       "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
       "grid_data": ["data", "static", "land", "grid_data", "filename"],
