@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 1.0.3 [2020-06-30]
+**************************
+APP: **fp_docker_entrypoint_app_main_hyde.py**
+	- WS Downloader and GROUND NETWORK WS application(s)
+
 Version 1.0.2 [2020-04-20]
 **************************
 APP: **fp_docker_entrypoint_app_main_hyde.py**
