@@ -522,8 +522,9 @@ that will be implemented are defined as follow:
 
 	c) Put the observed datasets and the nwp wrf datasets in the SOURCE_DATA_DYNAMIC_RAW folder; the structure of datasets will be as follows:
 
-	::
-		.
+	.. code-block:: bash
+
+		docker datasets
 		├── dynamic_data
 		│   ├── anag-ANEMOMETRO.json
 		│   ├── anag-IGROMETRO.json
@@ -543,11 +544,11 @@ that will be implemented are defined as follow:
 		├── processed_data
 		└── static_data
 		    └── land
-		        ├── marche.aspect.txt
-		        ├── marche.dem.txt
-		        ├── marche.hillshade.txt
-		        ├── marche.roughness.txt
-		        └── marche.slope.txt
+			├── marche.aspect.txt
+			├── marche.dem.txt
+			├── marche.hillshade.txt
+			├── marche.roughness.txt
+			└── marche.slope.txt
 		
 	c) running the container in executable mode:
 	
