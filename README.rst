@@ -492,7 +492,7 @@ that will be implemented are defined as follow:
 	example of nwp deterministic run.
 	The test case is based on two different procedures:
 
-	1. The **Hyde Docker**: to collect the nwp wrf outcome and prepare datasets for the hydrological model;
+	1. The **Hyde Docker**: to collect the observed datasets and the nwp wrf outcome; finally, to prepare datasets for the hydrological model;
 	2. The **HMC Docker**: to run the Continuum hydrological model using the data previously collected.
 
 	The dockers have to be prepared following the steps below: 
@@ -505,11 +505,11 @@ that will be implemented are defined as follow:
 	a) configuring the folders and the parameters in the fp-docker_variables_hyde.env file:
 
 	- SOURCE_DATA_STATIC='/docker_testcase/datasets_hyde/data/static_data/land/'
-	- SOURCE_DATA_DYNAMIC_RAW='/docker_testcase/datasets_hyde/dynamic_data/nwp/'
-	- SOURCE_DATA_DYNAMIC_PROCESSED='/docker_testcase/datasets_hyde/docker_data/'
-	- RUN_TIME_NOW=2020-03-20 00:00					
+	- SOURCE_DATA_DYNAMIC_RAW='/docker_testcase/datasets_hyde/dynamic_data/'
+	- SOURCE_DATA_DYNAMIC_PROCESSED='/docker_testcase/datasets_hyde/processed_data/'
+	- RUN_TIME_NOW=2020-06-17 00:00					
 	- RUN_TIME_STEPS_OBS=10
-	- RUN_TIME_STEPS_FOR=20
+	- RUN_TIME_STEPS_FOR=24
 	- RUN_NAME='fp_hyde_wrf'
 	- RUN_DOMAIN='marche'
 	- RUN_ENS=false
@@ -519,6 +519,33 @@ that will be implemented are defined as follow:
 	.. code-block:: bash
 	
 		>> 	./fp-docker_builder.sh -f fp-docker_variables_hyde.env
+
+	c) Put the observed datasets and the nwp wrf datasets in the SOURCE_DATA_DYNAMIC_RAW folder; the structure of datasets will be as follows:
+		.
+		├── dynamic_data
+		│   ├── anag-ANEMOMETRO.json
+		│   ├── anag-IGROMETRO.json
+		│   ├── anag-PLUVIOMETRO.json
+		│   ├── anag-RADIOMETRO.json
+		│   ├── anag-TERMOMETRO.json
+		│   ├── ANEMOMETRO.json
+		│   ├── auxhist23_d03_2020-06-17_00:00:00
+		│   ├── auxhist23_d03_2020-06-17_01:00:00
+		│   ├── ...
+		│   ├── ...
+		│   ├── auxhist23_d03_2020-06-18_00:00:00
+		│   ├── IGROMETRO.json
+		│   ├── PLUVIOMETRO.json
+		│   ├── RADIOMETRO.json
+		│   └── TERMOMETRO.json
+		├── processed_data
+		└── static_data
+		    └── land
+		        ├── marche.aspect.txt
+		        ├── marche.dem.txt
+		        ├── marche.hillshade.txt
+		        ├── marche.roughness.txt
+		        └── marche.slope.txt
 		
 	c) running the container in executable mode:
 	
@@ -526,7 +553,7 @@ that will be implemented are defined as follow:
 	
 		>> 	./fp-docker_runner_hyde.sh -f fp-docker_variables_hyde.env 
 
-	d) collecting the datasets in the SOURCE_DATA_DYNAMIC_ARCHIVE folder of the Hyde docker and copy it to the source folder SOURCE_DATA_DYNAMIC_SOURCE of the HMC docker:
+	d) collecting the datasets in the SOURCE_DATA_DYNAMIC_PROCESSED folder of the Hyde docker and copy it to the source folder SOURCE_DATA_DYNAMIC_SOURCE of the HMC docker:
 
 	.. code-block:: bash
 
