@@ -521,6 +521,8 @@ that will be implemented are defined as follow:
 		>> 	./fp-docker_builder.sh -f fp-docker_variables_hyde.env
 
 	c) Put the observed datasets and the nwp wrf datasets in the SOURCE_DATA_DYNAMIC_RAW folder; the structure of datasets will be as follows:
+
+	::
 		.
 		├── dynamic_data
 		│   ├── anag-ANEMOMETRO.json
