@@ -404,9 +404,28 @@ def get_variable(var_group_envs=None, var_group_local=None,
     else:
         logging.info(' WARNING: environment variables return None')
 
+    if 'run_domain' not in list(var_def.keys()):
+        logging.warning(' WARNING: environment variables of domain name in not defined.')
+        run_domain_envs = False
+    else:
+        run_domain_envs = True
+
     if var_group_local:
         for var_key, var_name in var_group_local.items():
-            var_def[var_key] = var_name
+
+            if run_domain_envs and not var_key == 'run_domain':
+
+                if isinstance(var_name, str):
+                    var_tmp = var_name.replace('run_domain', ':')
+                    var_tmp = var_tmp.format(var_def['run_domain'])
+                    var_name_def = var_tmp
+                else:
+                    var_name_def = var_name
+                var_def[var_key] = var_name_def
+
+            elif not run_domain_envs:
+                var_def[var_key] = var_name_def
+
     else:
         logging.warning(' WARNING: local variables return None')
 

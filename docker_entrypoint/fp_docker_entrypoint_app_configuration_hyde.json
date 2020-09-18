@@ -1,6 +1,6 @@
 {
   "version": "1.6.0",
-  "apps_name": ["ws_downloader","ws_runner", "nwp_runner"],
+  "apps_name": ["ws_downloader", "ws_runner", "nwp_runner"],
   "tags": {
     "ws_downloader": {
       "run_domain": "string",
@@ -41,16 +41,16 @@
         "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
       },
       "local_variable": {
-        "run_domain": "marche",
+        "run_domain": "{run_domain}",
         "run_name": "wrf_deterministic_4_hmc",
         "run_ens_mode": false,
         "run_ens_var": "RFarm_ID",
         "run_ens_min": 1,
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
-        "terrain_data": "marche.dem.txt",
-        "grid_data": "marche_grid_wrf.workspace",
-        "geo_data": "marche_geo_wrf.workspace"
+        "terrain_data": "{run_domain}.dem.txt",
+        "grid_data": "{run_domain}_grid_wrf.workspace",
+        "geo_data": "{run_domain}_geo_wrf.workspace"
       }
     },
     "ws_runner": {
@@ -64,16 +64,16 @@
         "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
       },
       "local_variable": {
-        "run_domain": "marche",
+        "run_domain": "{run_domain}",
         "run_name": "wrf_deterministic_4_hmc",
         "run_ens_mode": false,
         "run_ens_var": "RFarm_ID",
         "run_ens_min": 1,
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
-        "terrain_data": "marche.dem.txt",
-        "grid_data": "marche_grid_wrf.workspace",
-        "geo_data": "marche_geo_wrf.workspace"
+        "terrain_data": "{run_domain}.dem.txt",
+        "grid_data": "{run_domain}_grid_wrf.workspace",
+        "geo_data": "{run_domain}_geo_wrf.workspace"
       }
     },
     "nwp_runner": {
@@ -210,6 +210,7 @@
   "lookup_table": {
     "_comment": "lookup table to update values in configurations file(s) [VAR_ENV 2 JSON]",
     "ws_downloader": {
+      "run_domain": ["ancillary", "domain"],
       "run_time_step_obs": ["time","time_period"],
       "terrain_data": ["data", "static", "land", "file_name"]
     },
