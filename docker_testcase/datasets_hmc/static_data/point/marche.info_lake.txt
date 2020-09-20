@@ -1,3 +1,2 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:71f24f65158cc82e6f68311b68daf1dce760a3ee4c51df271b753db8b2356eaf
-size 71
+0	#Numero laghi							  																											  #numero dighe
+

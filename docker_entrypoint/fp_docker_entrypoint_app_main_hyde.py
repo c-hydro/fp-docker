@@ -381,6 +381,13 @@ def read_file_json(file_name):
 
 
 # -------------------------------------------------------------------------------------
+# Safe dict for unfilled keys
+class SafeDict(dict):
+    def __missing__(self, key):
+        key = '{' + key + '}'
+        return key
+
+
 # Method to get environment and local variable(s)
 def get_variable(var_group_envs=None, var_group_local=None,
                  run_path_root_default=None, run_time_now_format='%Y%m%d%H%M'):
@@ -410,15 +417,21 @@ def get_variable(var_group_envs=None, var_group_local=None,
     else:
         run_domain_envs = True
 
+    # Add different definition of run_domain, $DOMAIN ...
+    if 'run_domain' in list(var_def.keys()):
+        var_def['$DOMAIN'] = var_def['run_domain']
+
     if var_group_local:
         for var_key, var_name in var_group_local.items():
 
             if run_domain_envs and not var_key == 'run_domain':
 
                 if isinstance(var_name, str):
-                    var_tmp = var_name.replace('run_domain', ':')
-                    var_tmp = var_tmp.format(var_def['run_domain'])
-                    var_name_def = var_tmp
+                    if 'run_domain' in var_name:
+                        var_tmp = var_name.format_map(SafeDict(run_domain=var_def['run_domain']))
+                        var_name_def = var_tmp
+                    else:
+                        var_name_def = var_name
                 else:
                     var_name_def = var_name
                 var_def[var_key] = var_name_def

@@ -1,5 +1,6 @@
 {
   "version": "1.6.0",
+  "__apps_allowed_tags": ["ws_downloader", "ws_runner", "nwp_runner"],
   "apps_name": ["ws_downloader", "ws_runner", "nwp_runner"],
   "tags": {
     "ws_downloader": {
@@ -49,8 +50,10 @@
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
         "terrain_data": "{run_domain}.dem.txt",
-        "grid_data": "{run_domain}_grid_wrf.workspace",
-        "geo_data": "{run_domain}_geo_wrf.workspace"
+        "source_registry": "anag-{source_var_name}.json",
+        "source_datasets": "{source_var_name}.json",
+        "destination": "{destination_var_name}_{run_domain}_{destination_datetime}.csv",
+        "log": "ws_downloader_{run_domain}_log.txt"
       }
     },
     "ws_runner": {
@@ -72,8 +75,24 @@
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
         "terrain_data": "{run_domain}.dem.txt",
-        "grid_data": "{run_domain}_grid_wrf.workspace",
-        "geo_data": "{run_domain}_geo_wrf.workspace"
+        "predictor_data_aspect": "{run_domain}.aspect.txt",
+        "predictor_data_slope": "{run_domain}.slope.txt",
+        "predictor_data_hillshade": "{run_domain}.hillshade.txt",
+        "predictor_data_roughness": "{run_domain}.roughness.txt",
+        "grid_ancillary": "ws_runner_ancillary_{run_domain}_grid.workspace",
+        "terrain_ancillary": "ws_runner_ancillary_{run_domain}_land.workspace",
+        "predictor_ancillary": "ws_runner_ancillary_{run_domain}_predictor.workspace",
+        "source_ancillary": "ws_runner_$yyyy$mm$dd$HH$MM.workspace",
+        "outcome_ancillary": "ws_runner_ancillary_{run_domain}_outcome_$yyyy$mm$dd$HH$MM.workspace",
+        "source_product_rain": "rain_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_air_temperature": "air_temperature_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_relative_humidity": "relative_humidity_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_incoming_radiation": "radiation_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_wind_speed": "wind_speed_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_air_pressure": "air_pressure_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_snow_height": "snow_height_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "outcome_product": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
+        "log": "ws_runner_{run_domain}_log.txt"
       }
     },
     "nwp_runner": {
@@ -87,16 +106,26 @@
         "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
       },
       "local_variable": {
-        "run_domain": "marche",
+        "run_domain": "{run_domain}",
         "run_name": "wrf_deterministic_4_hmc",
         "run_ens_mode": false,
         "run_ens_var": "RFarm_ID",
         "run_ens_min": 1,
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
-        "terrain_data": "marche.dem.txt",
-        "grid_data": "marche_grid_wrf.workspace",
-        "geo_data": "marche_geo_wrf.workspace"
+        "terrain_data": "{run_domain}.dem.txt",
+        "grid_data": "nwp_runner_ancillary_{run_domain}_grid.workspace",
+        "geo_data": "nwp_runner_ancillary_{run_domain}_land.workspace",
+        "source_ancillary": "nwp_runner_ancillary_{run_domain}_source_{datetime_ancillary}.workspace",
+        "processing_ancillary": "nwp_runner_ancillary_{run_domain}_processing_{datetime_ancillary}.workspace",
+        "outcome_ancillary": "nwp_runner_ancillary_{run_domain}_outcome_{datetime_ancillary}.workspace",
+        "source_product_rain": "auxhist23_d03_{datetime_source}",
+        "source_product_air_temperature": "auxhist23_d03_{datetime_source}",
+        "source_product_relative_humidity": "auxhist23_d03_{datetime_source}",
+        "source_product_incoming_radiation": "auxhist23_d03_{datetime_source}",
+        "source_product_wind_speed": "auxhist23_d03_{datetime_source}",
+        "outcome_product": "wrf_{run_domain}_{datetime_outcome}.nc",
+        "log": "nwp_runner_{run_domain}_log.txt"
       }
     },
     "nwp_adapter" : {
@@ -110,16 +139,16 @@
         "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
       },
       "local_variable": {
-        "run_domain": "marche",
+        "run_domain": "{run_domain}",
         "run_name": "wrf_deterministic_4_hmc",
         "run_ens_mode": false,
         "run_ens_var": "RFarm_ID",
         "run_ens_min": 1,
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
-        "terrain_data" : "marche.dem.txt",
-        "grid_data": "marche_grid_wrf.workspace",
-        "geo_data": "marche_geo_wrf.workspace"
+        "terrain_data" : "{run_domain}.dem.txt",
+        "grid_data": "{run_domain}_grid_wrf_adapter.workspace",
+        "geo_data": "{run_domain}_geo_wrf_adapter.workspace"
       }
     }
   },
@@ -212,18 +241,51 @@
     "ws_downloader": {
       "run_domain": ["ancillary", "domain"],
       "run_time_step_obs": ["time","time_period"],
-      "terrain_data": ["data", "static", "land", "file_name"]
+      "terrain_data": ["data", "static", "land", "file_name"],
+      "source_registry": ["data", "dynamic", "source", "registry", "file_name"],
+      "source_datasets": ["data", "dynamic", "source", "datasets", "file_name"],
+      "destination": ["data", "dynamic", "destination", "file_name"],
+      "log": ["log", "file_name"]
     },
     "ws_runner": {
+      "run_domain": ["algorithm", "ancillary", "domain"],
       "run_time_step_obs": ["data", "dynamic", "time", "time_observed_step"],
-      "terrain_data": ["data", "static", "land", "file_name"]
+      "terrain_data": ["data", "static", "land", "land_ref", "filename"],
+      "predictor_data_aspect": ["data", "static", "predictor", "aspect_data", "filename"],
+      "predictor_data_hillshade": ["data", "static", "predictor", "hillshade_data", "filename"],
+      "predictor_data_slope": ["data", "static", "predictor", "slope_data", "filename"],
+      "predictor_data_roughness": ["data", "static", "predictor", "roughness_data", "filename"],
+      "grid_ancillary": ["data", "static", "grid_ref", "filename"],
+      "terrain_ancillary": ["data", "static", "land", "land_ancillary", "filename"],
+      "predictor_ancillary": ["data", "static", "predictor", "predictor_ancillary", "filename"],
+      "source_ancillary": ["data", "dynamic", "source", "source_ancillary", "filename"],
+      "outcome_ancillary": ["data", "dynamic", "outcome", "outcome_ancillary", "filename"],
+      "source_product_rain": ["data", "dynamic", "source", "rain_data", "filename"],
+      "source_product_air_temperature": ["data", "dynamic", "source", "air_temperature_data", "filename"],
+      "source_product_relative_humidity": ["data", "dynamic", "source", "relative_humidity_data", "filename"],
+      "source_product_incoming_radiation": ["data", "dynamic", "source", "incoming_radiation_data", "filename"],
+      "source_product_wind_speed": ["data", "dynamic", "source", "wind_data", "filename"],
+      "source_product_air_pressure": ["data", "dynamic", "source", "air_pressure_data", "filename"],
+      "source_product_snow_height": ["data", "dynamic", "source", "snow_height_data", "filename"],
+      "outcome_product": ["data", "dynamic", "outcome", "ws_product", "filename"],
+      "log": ["data", "log", "filename"]
     },
     "nwp_runner": {
       "run_time_step_for": ["data", "dynamic", "time", "time_forecast_period"],
       "run_domain": ["algorithm","ancillary", "domain"],
       "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
       "grid_data": ["data", "static", "land", "grid_data", "filename"],
-      "geo_data": ["data", "static", "land", "geo_data", "filename"]
+      "geo_data": ["data", "static", "land", "geo_data", "filename"],
+      "source_ancillary": ["data", "dynamic", "ancillary", "nwp_source_ancillary", "filename"],
+      "processing_ancillary": ["data", "dynamic", "ancillary", "nwp_processing_ancillary", "filename"],
+      "outcome_ancillary": ["data", "dynamic", "ancillary", "nwp_outcome_ancillary", "filename"],
+      "source_product_rain": ["data", "dynamic", "source", "rain_source_data", "filename"],
+      "source_product_air_temperature": ["data", "dynamic", "source", "air_temperature_source_data", "filename"],
+      "source_product_relative_humidity": ["data", "dynamic", "source", "relative_humidity_source_data", "filename"],
+      "source_product_incoming_radiation": ["data", "dynamic", "source", "incoming_radiation_source_data", "filename"],
+      "source_product_wind_speed": ["data", "dynamic", "source", "wind_source_data", "filename"],
+      "outcome_product": ["data", "dynamic", "outcome", "nwp_outcome_data", "filename"],
+      "log": ["data", "log", "filename"]
     },
     "nwp_adapter": {
       "run_domain": ["algorithm","ancillary", "domain"],
