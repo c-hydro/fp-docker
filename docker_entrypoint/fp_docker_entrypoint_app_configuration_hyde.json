@@ -124,7 +124,7 @@
         "source_product_relative_humidity": "auxhist23_d03_{datetime_source}",
         "source_product_incoming_radiation": "auxhist23_d03_{datetime_source}",
         "source_product_wind_speed": "auxhist23_d03_{datetime_source}",
-        "outcome_product": "wrf_{run_domain}_{datetime_outcome}.nc",
+        "outcome_product": "nwp_wrf_{datetime_outcome}.nc",
         "log": "nwp_runner_{run_domain}_log.txt"
       }
     },
