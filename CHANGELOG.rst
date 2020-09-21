@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 1.0.4 [2020-09-20]
+**************************
+APP: **fp_docker_entrypoint_app_main_hyde.py**
+	- Added the customization for using application over different domains by using {run_domain} tag
+	- Added the options to dynamically change the names of input and output of all applications
+
+
 Version 1.0.3 [2020-06-30]
 **************************
 APP: **fp_docker_entrypoint_app_main_hyde.py**
