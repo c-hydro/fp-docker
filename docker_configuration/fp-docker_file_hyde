@@ -78,6 +78,8 @@ WORKDIR ${fp_folder_entrypoint}
 WORKDIR ${fp_folder_entrypoint}
 WORKDIR ${fp_folder_entrypoint}
 WORKDIR ${fp_folder_entrypoint}
+WORKDIR ${fp_folder_entrypoint}
+WORKDIR ${fp_folder_entrypoint}
 
 # get hmc python package from github repository
 RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-hyde.git --branch v1.9.5 --single-branch /tmp/fp_hyde
@@ -85,7 +87,7 @@ RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@git
 RUN cp -r /tmp/fp_hyde/. ${fp_folder_package_fp_hyde} 
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.3 --single-branch /tmp/fp-docker
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.4 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
