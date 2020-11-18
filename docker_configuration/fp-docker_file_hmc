@@ -88,25 +88,25 @@ RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /hom
 
 # get hmc python package from github repository
 WORKDIR ${fp_folder_entrypoint}
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.5 --single-branch /tmp/hmc
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.6 --single-branch /tmp/hmc
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/hmc/. ${fp_folder_package_hmc} 
 
 # get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.2 --single-branch /tmp/fp-docker
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.4 --single-branch /tmp/fp-docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
 # prepare share folder(s) to mount external repos
-ENV fp_folder_mount_static_land /home/fp/fp_mount/datasets_hmc/static_land/
-ENV fp_folder_mount_static_point /home/fp/fp_mount/datasets_hmc/static_point/
+ENV fp_folder_mount_static_gridded /home/fp/fp_mount/datasets_hmc/static/gridded/
+ENV fp_folder_mount_static_point /home/fp/fp_mount/datasets_hmc/static/point/
 ENV fp_folder_mount_dyn_source /home/fp/fp_mount/datasets_hmc/dynamic_source/
-ENV fp_folder_mount_dyn_archive /home/fp/fp_mount/datasets_hmc/dynamic_archive/
+ENV fp_folder_mount_dyn_destination /home/fp/fp_mount/datasets_hmc/dynamic_destination/
 ENV fp_folder_mount_dyn_restart /home/fp/fp_mount/datasets_hmc/dynamic_restart/
-RUN mkdir -p ${fp_folder_mount_static_land}
+RUN mkdir -p ${fp_folder_mount_static_gridded}
 RUN mkdir -p ${fp_folder_mount_static_point}
 RUN mkdir -p ${fp_folder_mount_dyn_source}
-RUN mkdir -p ${fp_folder_mount_dyn_archive}
+RUN mkdir -p ${fp_folder_mount_dyn_destination}
 RUN mkdir -p ${fp_folder_mount_dyn_restart}
 
 # set entrypoint

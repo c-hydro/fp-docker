@@ -20,7 +20,9 @@ import subprocess
 import time
 import datetime
 import json
+
 import pandas as pd
+import numpy as np
 
 from copy import deepcopy
 from argparse import ArgumentParser
@@ -47,36 +49,14 @@ def main():
 
     # Get settings configuration file
     run_settings_default = read_file_json(file_settings)
-
-    # Get environment variable(s)
-    run_variable = get_variable(var_group_envs=run_settings_default['variable']['env_variable'],
-                                var_group_local=run_settings_default['variable']['local_variable'],
-                                run_path_root_default=os.path.dirname(os.path.realpath(__file__)))
-
-    # Get file and folder(s)
-    run_tags = run_settings_default['tags']
-    run_folders = set_tags(run_settings_default['folder'], tags={'run_path_root': run_variable['run_path_root']})
-    run_files = run_settings_default['file']
-    run_apps = run_settings_default['app']
-    run_cmd = run_settings_default['cmd']
-    # Join file(s) and folder(s) using defined path(s)
-    run_files = join_folder2file(run_folders, run_files)
-    # Join app(s) and folder(s) using  defined path(s)
-    run_apps = join_folder2file(run_folders, run_apps)
-    # Make folder (is not exist)
-    make_folder(list(run_folders.values()))
+    # Get app name list
+    app_list = run_settings_default['apps_name']
+    # Organize app(s) env
+    app_obj, log_obj = organize_apps(app_list, run_settings_default)
 
     # Set algorithm logging
-    set_logging(logger_file=run_files['file_app_docker_log'])
-
-    # Get parameters and data configuration file
-    file_parameters = run_files['file_app_runner_configuration_parameters_default']
-    file_data = run_files['file_app_runner_configuration_data_default']
-
-    run_parameters_default = read_file_json(file_parameters)
-    run_data_default = read_file_json(file_data)
-
-    run_lookup_table = run_settings_default['lookup_table']
+    make_folder([log_obj['folder_docker_log']])
+    set_logging(logger_file=os.path.join(log_obj['folder_docker_log'], log_obj['file_docker_log']))
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
@@ -91,50 +71,93 @@ def main():
     # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
-    # Fill parameters file with run information
-    logging.info(' ===> Define parameters file ... ')
-    run_parameters_def = merge_dict([run_variable, run_files, run_folders])
-    run_parameters_upd = fill_structure(run_parameters_default, run_parameters_def,
-                                        look_up_table=run_lookup_table['file_parameters'])
-    logging.info(' ===> Define parameters file ... OK')
+    # Iterate over application(s)
+    for app_name in app_list:
 
-    # Fill datasets file with run information
-    logging.info(' ===> Define datasets file ... ')
-    run_data_def = merge_dict([run_variable, run_files, run_folders])
-    run_data_upd = fill_structure(run_data_default, run_data_def,
-                                  look_up_table=run_lookup_table['file_data'])
-    logging.info(' ===> Define datasets file ... OK')
-    # -------------------------------------------------------------------------------------
+        # -------------------------------------------------------------------------------------
+        # Starting information
+        logging.info(' ===> Application Name: ' + app_name + ' ... ')
 
-    # -------------------------------------------------------------------------------------
-    # Fill datasets file with run information
-    logging.info(' ===> Define command-line process ... ')
-    run_cmd_def = compose_cmd(run_cmd, run_apps, run_files, time=run_variable['run_time_now'])
-    run_cmd_upd = join_cmd(run_cmd_def)
-    logging.info(' ===> Define command-line process ... OK')
-    # -------------------------------------------------------------------------------------
+        # Get application frame
+        app_frame = app_obj[app_name]
 
-    # -------------------------------------------------------------------------------------
-    # Write parameters file in json format
-    logging.info(' ===> Write parameters structure ... ')
-    file_run_app_parameters = run_files['file_app_runner_configuration_parameters_custom']
-    write_file_json(file_run_app_parameters, run_parameters_upd)
-    logging.info(' ===> Write parameters structure ... OK')
+        # Get environment variable(s)
+        run_variable = get_variable(var_group_envs=app_frame['variable']['env_variable'],
+                                    var_group_local=app_frame['variable']['local_variable'],
+                                    run_path_root_default=os.path.dirname(os.path.realpath(__file__)))
+        # Get lookup table
+        run_lookup_table = app_frame['lookup_table']
 
-    # Write datasets file in json format
-    logging.info(' ===> Write datasets file ... ')
-    file_run_app_data = run_files['file_app_runner_configuration_data_custom']
-    write_file_json(file_run_app_data, run_data_upd)
-    logging.info(' ===> Write datasets file ... OK')
-    # -------------------------------------------------------------------------------------
+        # Get file and folder(s)
+        run_tags = join_tags(app_frame['tags'], run_variable)
+        run_files = set_tags(app_frame['file'], tags=run_tags)
+        run_folders = set_tags(app_frame['folder'], tags=run_tags)
+        run_apps = app_frame['app']
+        run_cmd = app_frame['cmd']
 
-    # -------------------------------------------------------------------------------------
-    # Run command-line list
-    logging.info(' ===> Set process execution ... ')
-    for run_cmd_id in run_cmd_upd:
-        execute_cmd(run_cmd_id)
-    logging.info(' ===> Set process execution ... OK')
-    # -------------------------------------------------------------------------------------
+        # Join file(s) and folder(s) using defined path(s)
+        run_files = join_folder2file(run_folders, run_files)
+        # Join app(s) and folder(s) using defined path(s)
+        run_apps = join_folder2file(run_folders, run_apps)
+        # Make folder (is not exist)
+        make_folder(list(run_folders.values()))
+
+        # Get configuration file
+        file_configuration_parameters = run_files['file_app_configuration_parameters_default']
+        file_configuration_datasets = run_files['file_app_configuration_datasets_default']
+        run_configuration_parameters_default = read_file_json(file_configuration_parameters)
+        run_configuration_datasets_default = read_file_json(file_configuration_datasets)
+        # -------------------------------------------------------------------------------------
+
+        # -------------------------------------------------------------------------------------
+        # Fill datasets file with run information
+        logging.info(' ===> Define datasets file ... ')
+        run_datasets_def = merge_dict([run_variable, run_files, run_folders])
+        run_datasets_upd = fill_structure(run_configuration_datasets_default, run_datasets_def,
+                                          look_up_table=run_lookup_table['datasets'])
+        logging.info(' ===> Define datasets file ... OK')
+
+        # Fill parameters file with run information
+        logging.info(' ===> Define parameters file ... ')
+        run_parameters_def = merge_dict([run_variable, run_files, run_folders])
+        run_parameters_upd = fill_structure(run_configuration_parameters_default, run_parameters_def,
+                                            look_up_table=run_lookup_table['parameters'])
+        logging.info(' ===> Define parameters file ... OK')
+        # -------------------------------------------------------------------------------------
+
+        # -------------------------------------------------------------------------------------
+        # Fill datasets file with run information
+        logging.info(' ===> Define command-line process ... ')
+        run_cmd_def = compose_cmd(run_cmd, run_apps, run_files, time=run_variable['run_time_now'])
+        run_cmd_upd = join_cmd(run_cmd_def)
+        logging.info(' ===> Define command-line process ... OK')
+        # -------------------------------------------------------------------------------------
+
+        # -------------------------------------------------------------------------------------
+        # Write parameters file in json format
+        logging.info(' ===> Write parameters structure ... ')
+        file_run_app_parameters = run_files['file_app_configuration_parameters_custom']
+        write_file_json(file_run_app_parameters, run_parameters_upd)
+        logging.info(' ===> Write parameters structure ... OK')
+
+        # Write datasets file in json format
+        logging.info(' ===> Write datasets file ... ')
+        file_run_app_data = run_files['file_app_configuration_datasets_custom']
+        write_file_json(file_run_app_data, run_datasets_upd)
+        logging.info(' ===> Write datasets file ... OK')
+        # -------------------------------------------------------------------------------------
+
+        # -------------------------------------------------------------------------------------
+        # Run command-line list
+        logging.info(' ===> Set process execution ... ')
+        execute_cmd(run_cmd_upd)
+        logging.info(' ===> Set process execution ... OK')
+        # -------------------------------------------------------------------------------------
+
+        # -------------------------------------------------------------------------------------
+        # Ending information
+        logging.info(' ===> Application Name: ' + app_name + ' ... DONE')
+        # -------------------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------------------
     # Info algorithm
@@ -154,46 +177,39 @@ def main():
 # -------------------------------------------------------------------------------------
 # Method to join cmd
 def join_cmd(cmd_parts_list, cmd_sep=' '):
-    cmd_join = []
-    for cmd_parts_tmp in cmd_parts_list:
-        cmd_join.append(cmd_sep.join(cmd_parts_tmp))
+    cmd_join = cmd_sep.join(cmd_parts_list)
     return cmd_join
 # -------------------------------------------------------------------------------------
 
 
 # -------------------------------------------------------------------------------------
 # Method to compose cmd
-def compose_cmd(cmd, apps, files, time=None, interpreter="python", excluded_keys=['_comment']):
+def compose_cmd(cmd, apps, files, time=None, interpreter="python"):
 
-    cmd_line_all = []
-    for cmd_key, cmd_part in cmd.items():
-        if cmd_key not in excluded_keys:
-            cmd_scripts = cmd_part['script']
-            cmd_args = cmd_part['args']
+    cmd_scripts = cmd['script']
+    cmd_args = cmd['args']
 
-            cmd_line_app = []
-            for script, args in zip(cmd_scripts, cmd_args):
-                if script in list(apps.keys()):
-                    app_def = apps[script]
+    cmd_line_app = []
+    for script, args in zip(cmd_scripts, cmd_args):
+        if script in list(apps.keys()):
+            app_def = apps[script]
 
-                    cmd_line_app = [interpreter, app_def]
-                    for arg_key, arg_value in args.items():
+            cmd_line_app = [interpreter, app_def]
+            for arg_key, arg_value in args.items():
 
-                        if arg_key != '-time':
-                            if arg_value in list(files.keys()):
-                                arg_tmp = files[arg_value]
-                                arg_def = arg_key + ' ' + arg_tmp
+                if arg_key != '-time':
+                    if arg_value in list(files.keys()):
+                        arg_tmp = files[arg_value]
+                        arg_def = arg_key + ' ' + arg_tmp
 
-                                cmd_line_app.extend([arg_def])
-                        else:
-                            if time is not None:
-                                arg_time = time
-                                arg_def = arg_key + ' ' + arg_time
-                                cmd_line_app.extend([arg_def])
+                        cmd_line_app.extend([arg_def])
+                else:
+                    if time is not None:
+                        arg_time = time
+                        arg_def = arg_key + ' ' + arg_time
+                        cmd_line_app.extend([arg_def])
 
-            cmd_line_all.append(cmd_line_app)
-
-    return cmd_line_all
+    return cmd_line_app
 # -------------------------------------------------------------------------------------
 
 
@@ -230,7 +246,7 @@ def execute_cmd(command_line):
 
 # -------------------------------------------------------------------------------------
 # Method to join folder and file
-def join_folder2file(folders, files, folder_tag='folder', file_tag='file'):
+def join_folder2file(folders, files, folder_tag='folder_app', file_tag='file_app'):
 
     for folder_key, folder_value in folders.items():
         if folder_key.startswith(folder_tag):
@@ -246,7 +262,11 @@ def join_folder2file(folders, files, folder_tag='folder', file_tag='file'):
 
 # -------------------------------------------------------------------------------------
 # Method to merge dict(s)
-def merge_dict(dict_list, excluded_keys=['_comment']):
+def merge_dict(dict_list, excluded_keys=None):
+
+    if excluded_keys is None:
+        excluded_keys = ['_comment', '__comment']
+
     dict_merge = {}
     for dict_wf in dict_list:
         for dict_key, dict_value in dict_wf.items():
@@ -302,8 +322,41 @@ def nested_set(dic, keys, value, create_missing=True):
 
 
 # -------------------------------------------------------------------------------------
+# Method to join tags name with value
+def join_tags(dict_tags, dict_values):
+
+    dict_filled = {}
+    for tag_name, tag_type in dict_tags.items():
+
+        if tag_name in list(dict_values.keys()):
+            if tag_type == 'string':
+                tag_value = dict_values[tag_name]
+                if isinstance(tag_value, str):
+                    tag_value_checked = tag_value
+                else:
+                    logging.info(' WARNING: defined tag value ' + str(tag_value) +
+                                 ' is not in string format. Assigned null value.')
+                    tag_value_checked = None
+            else:
+                logging.info(' WARNING: defined tag type ' + str(tag_type) + 'is not implemented yet')
+                tag_value_checked = None
+        else:
+            logging.info(' WARNING: defined tag name ' + str(tag_name) + ' is not in the tags used in configuration file')
+            tag_value_checked = None
+
+        dict_filled[tag_name] = tag_value_checked
+
+    return dict_filled
+
+# -------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------
 # Method to set name using tags
-def set_tags(names, tags, excluded_keys=['_comment']):
+def set_tags(names, tags, excluded_keys=None):
+
+    if excluded_keys is None:
+        excluded_keys = ['_comment', '__comment']
 
     names_del = deepcopy(names)
     for name_key, name_value in names_del.items():
@@ -385,6 +438,13 @@ def read_file_json(file_name):
 
 
 # -------------------------------------------------------------------------------------
+# Safe dict for unfilled keys
+class SafeDict(dict):
+    def __missing__(self, key):
+        key = '{' + key + '}'
+        return key
+
+
 # Method to get environment and local variable(s)
 def get_variable(var_group_envs=None, var_group_local=None,
                  run_path_root_default=None, run_time_now_format='%Y%m%d%H%M'):
@@ -408,9 +468,34 @@ def get_variable(var_group_envs=None, var_group_local=None,
     else:
         logging.info(' WARNING: environment variables return None')
 
+    if 'run_domain' not in list(var_def.keys()):
+        logging.warning(' WARNING: environment variables of domain name in not defined.')
+        run_domain_envs = False
+    else:
+        run_domain_envs = True
+
+    # Add different definition of run_domain, $DOMAIN ...
+    if 'run_domain' in list(var_def.keys()):
+        var_def['$DOMAIN'] = var_def['run_domain']
+
     if var_group_local:
         for var_key, var_name in var_group_local.items():
-            var_def[var_key] = var_name
+
+            if run_domain_envs and not var_key == 'run_domain':
+
+                if isinstance(var_name, str):
+                    if 'run_domain' in var_name:
+                        var_tmp = var_name.format_map(SafeDict(run_domain=var_def['run_domain']))
+                        var_name_def = var_tmp
+                    else:
+                        var_name_def = var_name
+                else:
+                    var_name_def = var_name
+                var_def[var_key] = var_name_def
+
+            elif not run_domain_envs:
+                var_def[var_key] = var_name_def
+
     else:
         logging.warning(' WARNING: local variables return None')
 
@@ -428,6 +513,97 @@ def get_variable(var_group_envs=None, var_group_local=None,
         logging.warning(' WARNING: variable run_time_now is not defined!')
 
     return var_def
+# -------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------
+# Method to organize app(s) configuration
+def organize_apps(app_list, app_configuration, tag_path_root='run_path_root'):
+
+    if isinstance(app_list, str):
+        app_list = [app_list]
+
+    log_obj = None
+    app_obj = {}
+    for app_name in app_list:
+        app_frame = {}
+        for config_key, config_data in app_configuration.items():
+            if config_key == 'log':
+                log_obj = config_data
+
+            if isinstance(config_data, dict):
+                if app_name in list(config_data.keys()):
+                    app_field = config_data[app_name]
+                    app_frame[config_key] = app_field
+        app_obj[app_name] = app_frame
+
+    app_path_list = []
+    for app_name, app_data in app_obj.items():
+        for app_key, app_field in app_data.items():
+            app_path_step = get_dict_value(app_field, tag_path_root, [])
+            if not isinstance(app_path_step, list):
+                app_path_step = [app_path_step]
+            if app_path_step.__len__() > 0:
+                app_path_step = app_path_step[0]
+                if os.path.isdir(app_path_step):
+                    app_path_list.append(app_path_step)
+
+    if app_path_list.__len__() > 0:
+        app_path_root = list(set(app_path_list))
+        if app_path_root.__len__() > 1:
+            app_path_root = app_path_root[0]
+        app_path_root = app_path_root[0]
+    else:
+        app_path_root = os.environ.get('HOME')
+
+    log_obj_filled = {}
+    for log_key, log_value in log_obj.items():
+        if log_key != '_comment':
+            log_filled = log_value.format(run_path_root=app_path_root)
+            log_obj_filled[log_key] = log_filled
+
+    return app_obj, log_obj_filled
+# -------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------
+# Method to get nested value
+def get_dict_value(d, key, value=[]):
+
+    for k, v in iter(d.items()):
+        if isinstance(v, dict):
+            if k == key:
+                for kk, vv in iter(v.items()):
+                    temp = [kk, vv]
+                    value.append(temp)
+            else:
+                vf = get_dict_value(v, key, value)
+                if isinstance(vf, list):
+                    if vf:
+                        vf_end = vf[0]
+                    else:
+                        vf_end = None
+                elif isinstance(vf, np.ndarray):
+                    vf_end = vf.tolist()
+                else:
+                    vf_end = vf
+                if vf_end not in value:
+                    if vf_end:
+                        if isinstance(value, list):
+                            value.append(vf_end)
+                        elif isinstance(value, str):
+                            value = [value, vf_end]
+                    else:
+                        pass
+                else:
+                    pass
+        else:
+            if k == key:
+                if isinstance(v, np.ndarray):
+                    value = v
+                else:
+                    value = v
+    return value
 # -------------------------------------------------------------------------------------
 
 
@@ -463,8 +639,7 @@ def set_logging(logger_file='log.txt', logger_format=None):
     logging.root.setLevel(logging.DEBUG)
 
     # Open logging basic configuration
-    logging.basicConfig(level=logging.DEBUG, format=logger_format, filename=logger_file, filemode='w',
-                        disable_existing_loggers=False)
+    logging.basicConfig(level=logging.DEBUG, format=logger_format, filename=logger_file, filemode='w')
 
     # Set logger handle
     logger_handle_1 = logging.FileHandler(logger_file, 'w')
@@ -480,12 +655,6 @@ def set_logging(logger_file='log.txt', logger_format=None):
     # Add handle to logging
     logging.getLogger('').addHandler(logger_handle_1)
     logging.getLogger('').addHandler(logger_handle_2)
-
-    # Redirect logging message(s) of the configuration part
-    log_stream = log_stream_init.getvalue()
-    log_list = log_stream.split('\n')
-    for log_msg in log_list:
-        logging.info(log_msg)
 
 # -------------------------------------------------------------------------------------
 
