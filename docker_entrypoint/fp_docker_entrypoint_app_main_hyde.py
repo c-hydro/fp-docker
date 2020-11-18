@@ -20,6 +20,7 @@ import subprocess
 import time
 import datetime
 import json
+
 import pandas as pd
 import numpy as np
 
@@ -67,10 +68,13 @@ def main():
 
     # Time algorithm information
     start_time = time.time()
+    # -------------------------------------------------------------------------------------
 
+    # -------------------------------------------------------------------------------------
     # Iterate over application(s)
     for app_name in app_list:
 
+        # -------------------------------------------------------------------------------------
         # Starting information
         logging.info(' ===> Application Name: ' + app_name + ' ... ')
 
@@ -164,7 +168,7 @@ def join_cmd(cmd_parts_list, cmd_sep=' '):
 
 # -------------------------------------------------------------------------------------
 # Method to compose cmd
-def compose_cmd(cmd, apps, files, time=None, interpreter="python", excluded_keys=['_comment']):
+def compose_cmd(cmd, apps, files, time=None, interpreter="python"):
 
     cmd_scripts = cmd['script']
     cmd_args = cmd['args']
@@ -577,7 +581,6 @@ def set_logging(logger_file='log.txt', logger_format=None):
     # Remove old logging file
     if os.path.exists(logger_file):
         os.remove(logger_file)
-
 
     # Set level of root debugger
     logging.root.setLevel(logging.DEBUG)
