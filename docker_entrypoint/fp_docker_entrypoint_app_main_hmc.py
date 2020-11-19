@@ -3,8 +3,8 @@
 """
 Flood-Proofs Docker Tool - Entrypoint App
 
-__date__ = '20200423'
-__version__ = '1.0.1'
+__date__ = '20201116'
+__version__ = '1.5.0'
 __author__ = 'Fabio Delogu (fabio.delogu@cimafoundation.org'
 __library__ = 'docker'
 
@@ -32,8 +32,8 @@ from argparse import ArgumentParser
 # -------------------------------------------------------------------------------------
 # Algorithm information
 alg_name = 'FP DOCKER TOOL - ENTRYPOINT APP'
-alg_version = '1.0.1'
-alg_release = '2020-04-23'
+alg_version = '1.5.0'
+alg_release = '2020-11-16'
 # Algorithm parameter(s)
 time_format = '%Y-%m-%d %H:%M'
 # -------------------------------------------------------------------------------------
@@ -110,19 +110,19 @@ def main():
         # -------------------------------------------------------------------------------------
 
         # -------------------------------------------------------------------------------------
-        # Fill datasets file with run information
-        logging.info(' ===> Define datasets file ... ')
-        run_datasets_def = merge_dict([run_variable, run_files, run_folders])
-        run_datasets_upd = fill_structure(run_configuration_datasets_default, run_datasets_def,
-                                          look_up_table=run_lookup_table['datasets'])
-        logging.info(' ===> Define datasets file ... OK')
-
         # Fill parameters file with run information
         logging.info(' ===> Define parameters file ... ')
         run_parameters_def = merge_dict([run_variable, run_files, run_folders])
         run_parameters_upd = fill_structure(run_configuration_parameters_default, run_parameters_def,
                                             look_up_table=run_lookup_table['parameters'])
         logging.info(' ===> Define parameters file ... OK')
+
+        # Fill datasets file with run information
+        logging.info(' ===> Define datasets file ... ')
+        run_datasets_def = merge_dict([run_variable, run_files, run_folders])
+        run_datasets_upd = fill_structure(run_configuration_datasets_default, run_datasets_def,
+                                          look_up_table=run_lookup_table['datasets'])
+        logging.info(' ===> Define datasets file ... OK')
         # -------------------------------------------------------------------------------------
 
         # -------------------------------------------------------------------------------------
@@ -280,6 +280,7 @@ def merge_dict(dict_list, excluded_keys=None):
 # Method to fill structure with information
 def fill_structure(structure, information, look_up_table=None, time_format='%Y%m%d%H%M'):
     for info_key, info_value in information.items():
+
         if info_value is not None:
             if info_key in list(look_up_table.keys()):
                 struct_keys_list = look_up_table[info_key]

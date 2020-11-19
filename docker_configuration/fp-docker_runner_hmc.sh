@@ -108,11 +108,11 @@ docker run ${container_extra_opts}\
  	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
  	--rm\
  	--env-file ${container_env_file}\
- 	--mount type=bind,source=${SOURCE_DATA_STATIC_LAND},target=${TARGET_DATA_STATIC_LAND}\
+ 	--mount type=bind,source=${SOURCE_DATA_STATIC_GRIDDED},target=${TARGET_DATA_STATIC_GRIDDED}\
 	--mount type=bind,source=${SOURCE_DATA_STATIC_POINT},target=${TARGET_DATA_STATIC_POINT}\
  	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_RESTART},target=${TARGET_DATA_DYNAMIC_RESTART}\
 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_SOURCE},target=${TARGET_DATA_DYNAMIC_SOURCE}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_ARCHIVE},target=${TARGET_DATA_DYNAMIC_ARCHIVE}\
+ 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_DESTINATION},target=${TARGET_DATA_DYNAMIC_DESTINATION}\
  	${image_full_name}:${image_version}
 # ----------------------------------------------------------------------------------------
 
