@@ -87,15 +87,17 @@ RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.pr
 RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
 
 # get hmc python package from github repository
+RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.4 --single-branch /tmp/fp-docker
+# copy files from tmp to container folder(s)
+RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
+
+WORKDIR ${fp_folder_entrypoint}
+
+# get hmc python package from github repository
 WORKDIR ${fp_folder_entrypoint}
 RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/hmc.git --branch v1.8.6 --single-branch /tmp/hmc
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/hmc/. ${fp_folder_package_hmc} 
-
-# get hmc python package from github repository
-RUN git clone https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-docker.git --branch v1.0.4 --single-branch /tmp/fp-docker
-# copy files from tmp to container folder(s)
-RUN cp -r /tmp/fp-docker/docker_entrypoint/. ${fp_folder_entrypoint} 
 
 # prepare share folder(s) to mount external repos
 ENV fp_folder_mount_static_gridded /home/fp/fp_mount/datasets_hmc/static/gridded/

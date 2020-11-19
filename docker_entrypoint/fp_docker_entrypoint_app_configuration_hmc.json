@@ -73,7 +73,7 @@
       "file_io_dynamic_forcing_point_obs_discharge_section": "rs.db.$yyyy$mm$dd$HH$MM.txt",
       "file_io_dynamic_forcing_point_obs_damv": "damv.db.$yyyy$mm$dd$HH$MM.txt",
       "file_io_dynamic_forcing_point_obs_daml": "daml.db.$yyyy$mm$dd$HH$MM.txt",
-      "file_io_dynamic_forcing_gridded_obs_rain": "ws.db.$yyyy$mm$dd$HH$MM_TESTSTTTT.nc.gz",
+      "file_io_dynamic_forcing_gridded_obs_rain": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
       "file_io_dynamic_forcing_gridded_obs_air_temperature": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
       "file_io_dynamic_forcing_gridded_obs_relative_humidity": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
       "file_io_dynamic_forcing_gridded_obs_incoming_radiation": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
