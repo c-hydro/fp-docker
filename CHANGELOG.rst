@@ -2,6 +2,13 @@
 Changelog
 =========
 
+Version 1.0.5 [2021-01-08]
+**************************
+FIX: 
+    - update of fp environments for the python packages;
+    - build of hyde package with a new version of the conda environment and with a new settings of the conda repositories (pkgs, conda-forge, pip);
+    - build of hmc package with a new version of the conda environment and with a new settings of the conda repositories (pkgs, conda-forge, pip);
+
 Version 1.0.4 [2020-09-20]
 **************************
 APP: **fp_docker_entrypoint_app_main_hyde.py**
