@@ -50,7 +50,7 @@
         "run_ens_max": 1,
         "run_path_root": "/home/fp/",
         "terrain_data": "{run_domain}.dem.txt",
-        "source_registry": "anag-{source_var_name}.json",
+        "source_registry": "{source_var_name}-registry.json",
         "source_datasets": "{source_var_name}.json",
         "destination": "{destination_var_name}_{run_domain}_{destination_datetime}.csv",
         "log": "ws_downloader_{run_domain}_log.txt"
