@@ -544,11 +544,11 @@ that will be implemented are defined as follow:
 		├── processed_data
 		└── static_data
 		    └── land
-			├── marche.aspect.txt
-			├── marche.dem.txt
-			├── marche.hillshade.txt
-			├── marche.roughness.txt
-			└── marche.slope.txt
+				├── marche.aspect.txt
+				├── marche.dem.txt
+				├── marche.hillshade.txt
+				├── marche.roughness.txt
+				└── marche.slope.txt
 		
 	c) running the container in executable mode:
 	
