@@ -196,3 +196,16 @@ def write_configuration_file(app_entrypoint_obj_file, app_entrypoint_obj_dataset
 
     return True
 # -------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------
+# Method to filter entrypoint settings
+def filter_unnecessary_keys(obj_entrypoint_raw, excluded_keys=None):
+    if excluded_keys is None:
+        excluded_keys = ['__comment__', '_comment', '_comment_']
+    obj_entrypoint_filtered = {}
+    for obj_key, obj_field in obj_entrypoint_raw.items():
+        if obj_key not in excluded_keys:
+            obj_entrypoint_filtered[obj_key] = obj_field
+    return obj_entrypoint_filtered
+# -------------------------------------------------------------------------------------

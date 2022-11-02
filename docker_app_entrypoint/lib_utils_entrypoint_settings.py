@@ -12,6 +12,7 @@ import logging
 import os
 
 from lib_data_io import read_file_json
+from lib_utils_io import filter_unnecessary_keys
 from lib_info_args import logger_format
 
 # Logging
@@ -102,37 +103,24 @@ def parse_entrypoint_settings(obj_entrypoint_generic,
 
     if tag_obj_settings in list(obj_entrypoint_generic.keys()):
         obj_entrypoint_tmp = obj_entrypoint_generic[tag_obj_settings]
-        obj_entrypoint_settings = filter_entrypoint_settings(obj_entrypoint_tmp)
+        obj_entrypoint_settings = filter_unnecessary_keys(obj_entrypoint_tmp)
     else:
         log_fx.error(' ===> Field "' + tag_obj_settings + '" is not defined in the configuration file')
         raise RuntimeError('Field "' + tag_obj_settings + '" must be defined')
 
     if tag_obj_app in list(obj_entrypoint_generic.keys()):
         obj_entrypoint_tmp = obj_entrypoint_generic[tag_obj_app]
-        obj_entrypoint_app = filter_entrypoint_settings(obj_entrypoint_tmp)
+        obj_entrypoint_app = filter_unnecessary_keys(obj_entrypoint_tmp)
     else:
         log_fx.error(' ===> Field "' + tag_obj_app + '" is not defined in the configuration file')
         raise RuntimeError('Field "' + tag_obj_app + '" must be defined')
 
     if tag_obj_lut in list(obj_entrypoint_generic.keys()):
         obj_entrypoint_tmp = obj_entrypoint_generic[tag_obj_lut]
-        obj_entrypoint_lut = filter_entrypoint_settings(obj_entrypoint_tmp)
+        obj_entrypoint_lut = filter_unnecessary_keys(obj_entrypoint_tmp)
     else:
         log_fx.error(' ===> Field "' + tag_obj_lut + '" is not defined in the configuration file')
         raise RuntimeError('Field "' + tag_obj_lut + '" must be defined')
 
     return obj_entrypoint_settings, obj_entrypoint_app, obj_entrypoint_lut
-# -------------------------------------------------------------------------------------
-
-
-# -------------------------------------------------------------------------------------
-# Method to filter entrypoint settings
-def filter_entrypoint_settings(obj_entrypoint_raw, excluded_keys=None):
-    if excluded_keys is None:
-        excluded_keys = ['__comment__', '_comment', '_comment_']
-    obj_entrypoint_filtered = {}
-    for obj_key, obj_field in obj_entrypoint_raw.items():
-        if obj_key not in excluded_keys:
-            obj_entrypoint_filtered[obj_key] = obj_field
-    return obj_entrypoint_filtered
 # -------------------------------------------------------------------------------------

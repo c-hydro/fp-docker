@@ -106,10 +106,17 @@ def fill_tags2string(string_raw, tags_format=None, tags_filling=None, tags_templ
                             else:
                                 tag_dict_value = value_filling
 
-                            string_filled_step = string_filled_step.replace(tag_dict_key, tag_dict_value)
-                            string_list_key.append(tag_dict_key)
-                            string_list_value.append(tag_dict_value)
-                            string_list_type.append(tag_dict_type)
+                            if tag_dict_value is None:
+                                print('ciao')
+
+                            if tag_dict_value:
+                                string_filled_step = string_filled_step.replace(tag_dict_key, tag_dict_value)
+                                string_list_key.append(tag_dict_key)
+                                string_list_value.append(tag_dict_value)
+                                string_list_type.append(tag_dict_type)
+                            else:
+                                log_stream.warning(' ===> The key "' + tag_dict_key + '" for "' + string_filled_step +
+                                                   '" is not correctly filled; the value is set to NoneType')
 
             string_filled_def.append(string_filled_step)
 

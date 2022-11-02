@@ -6,12 +6,13 @@
 # Example: docker build -t c-hydro/fp_framework .
 
 # Explore the content of image (using bash interpreter)
-# Example: docker run -it --entrypoint bash c-hydro/fp_framework
+# Example (without TAG): docker run -it --entrypoint bash c-hydro/fp_framework
+# Example (with TAG): docker run -it --entrypoint bash c-hydro/fp_framework_hmc:dte
 # ----------------------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------------------
 # Script information
-script_name='FP Docker Builder - Packages Framework'
+script_name='DOCKER - Container Builder - Packages Framework'
 script_version='1.5.0'
 script_date='2022/10/14'
 
