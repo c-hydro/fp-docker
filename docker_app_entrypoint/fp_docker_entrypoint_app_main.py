@@ -15,6 +15,8 @@ python fp_docker_entrypoint_app_main.py -settings_file configuration.json
 # -------------------------------------------------------------------------------------
 # Complete library
 import logging
+import os
+import sys
 import time
 
 from argparse import ArgumentParser
@@ -54,7 +56,7 @@ def main():
 
     # -------------------------------------------------------------------------------------
     # Get algorithm settings
-    file_entrypoint_settings = get_args()
+    file_entrypoint_settings, file_entrypoint_path = get_args()
 
     # Read entrypoint generic object
     obj_entrypoint_generic = read_entrypoint_settings(file_entrypoint_settings)
@@ -142,7 +144,8 @@ def main():
 
         # Get configuration file (template and runtime structure)
         app_entrypoint_file_config_template, \
-            app_entrypoint_file_config_runtime = organize_configuration_file(app_entrypoint_script_args)
+            app_entrypoint_file_config_runtime = organize_configuration_file(app_entrypoint_script_args,
+                                                                             script_path_default=file_entrypoint_path)
         # Read configuration file (template structure)
         app_entrypoint_obj_config_template = read_configuration_file(app_entrypoint_file_config_template)
         # Fill configuration file
@@ -210,8 +213,13 @@ def get_args():
     else:
         file_settings = 'configuration.json'
 
-    return file_settings
+    file_path = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+    return file_settings, file_path
 # -------------------------------------------------------------------------------------
+
+def get_location():
+    pass
 
 
 # ----------------------------------------------------------------------------

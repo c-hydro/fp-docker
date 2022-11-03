@@ -11,6 +11,8 @@ Version:       '2.0.0'
 import logging
 import os
 
+from copy import deepcopy
+
 from lib_data_io import read_file_json, write_file_json
 from lib_utils_system import set_dict_value, make_folder
 from lib_info_args import logger_name
@@ -19,26 +21,52 @@ from lib_info_args import logger_name
 log_stream = logging.getLogger(logger_name)
 # -------------------------------------------------------------------------------------
 
-
 # -------------------------------------------------------------------------------------
 # Method to organize configuration file
-def organize_configuration_file(script_args, tag_arg_template='template', tag_arg_runtime='runtime'):
+def organize_configuration_file(script_args, tag_arg_template='template', tag_arg_runtime='runtime',
+                                script_path_default=None):
 
     app_configuration_file_template, app_configuration_file_runtime = {}, {}
-    for script_key, script_file in script_args.items():
+    for script_key, script_file_default in script_args.items():
         if tag_arg_template in script_key:
             script_key_root, script_key_type = script_key.split(tag_arg_template)
             script_key_root = script_key_root.strip(":")
-            app_configuration_file_template[script_key_root] = script_file
+            script_file_selected = search_configuration_file(script_file_default,
+                                                             file_location_default=script_path_default)
+            app_configuration_file_template[script_key_root] = script_file_selected
         elif tag_arg_runtime in script_key:
             script_key_root, script_key_type = script_key.split(tag_arg_runtime)
             script_key_root = script_key_root.strip(":")
-            app_configuration_file_runtime[script_key_root] = script_file
+            app_configuration_file_runtime[script_key_root] = script_file_default
         else:
             log_stream.error(' ===> Tag "' + script_key + '" to select case is not allowed')
             raise NotImplementedError('Case not implemented yet')
 
     return app_configuration_file_template, app_configuration_file_runtime
+# -------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------
+# Method to search configuration file in default location (if needed)
+def search_configuration_file(file_path_settings, file_location_default=None):
+    if os.path.exists(file_path_settings):
+        file_path_select = deepcopy(file_path_settings)
+    else:
+        if file_location_default:
+            log_stream.warning(' ===> Configuration file "' + file_path_settings +
+                               '" does not exist. Try to use the default location "' + file_location_default + '"')
+            file_location_settings, file_name_settings = os.path.split(file_path_settings)
+            file_path_select = os.path.join(file_location_default, file_name_settings)
+        else:
+            log_stream.error(' ===> Configuration file "' + file_path_settings +
+                             '" does not exist. The default location must be defined by a string path')
+            raise RuntimeError('The default location is defined by NoneType.')
+
+    if not os.path.exists(file_path_select):
+        log_stream.error(' ===> Configuration file "' + file_path_select + '" does not exist.')
+        raise FileNotFoundError('File not found. Try to change the location or the name of the file.')
+
+    return file_path_select
 # -------------------------------------------------------------------------------------
 
 
