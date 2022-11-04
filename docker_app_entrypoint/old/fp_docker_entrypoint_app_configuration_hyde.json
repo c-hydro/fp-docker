@@ -1,0 +1,297 @@
+{
+  "version": "2.0.0",
+  "__apps_allowed_tags": ["hmc_runner","ws_downloader", "ws_runner", "nwp_runner"],
+  "apps_name": ["hmc_runner","ws_downloader", "ws_runner", "nwp_runner"],
+  "tags": {
+    "ws_downloader": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "ws_runner": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "nwp_runner": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    },
+    "nwp_adapter": {
+      "run_domain": "string",
+      "run_name": "string",
+      "run_path_root": "string"
+    }
+  },
+  "log" : {
+    "_comment": "docker log file and folder definition",
+    "file_docker_log": "hyde_entrypoint_log_docker.txt",
+    "folder_docker_log": "{run_path_root}/fp_logs/"
+  },
+  "variable": {
+    "_comment": "environment and local docker variable(s) definition",
+    "ws_downloader": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "{run_domain}",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "{run_domain}.dem.txt",
+        "source_registry": "{source_var_name}-registry.json",
+        "source_datasets": "{source_var_name}.json",
+        "destination": "{destination_var_name}_{run_domain}_{destination_datetime}.csv",
+        "log": "ws_downloader_{run_domain}_log.txt"
+      }
+    },
+    "ws_runner": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "{run_domain}",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "{run_domain}.dem.txt",
+        "predictor_data_aspect": "{run_domain}.aspect.txt",
+        "predictor_data_slope": "{run_domain}.slope.txt",
+        "predictor_data_hillshade": "{run_domain}.hillshade.txt",
+        "predictor_data_roughness": "{run_domain}.roughness.txt",
+        "grid_ancillary": "ws_runner_ancillary_{run_domain}_grid.workspace",
+        "terrain_ancillary": "ws_runner_ancillary_{run_domain}_land.workspace",
+        "predictor_ancillary": "ws_runner_ancillary_{run_domain}_predictor.workspace",
+        "source_ancillary": "ws_runner_$yyyy$mm$dd$HH$MM.workspace",
+        "outcome_ancillary": "ws_runner_ancillary_{run_domain}_outcome_$yyyy$mm$dd$HH$MM.workspace",
+        "source_product_rain": "rain_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_air_temperature": "air_temperature_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_relative_humidity": "relative_humidity_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_incoming_radiation": "radiation_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_wind_speed": "wind_speed_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_air_pressure": "air_pressure_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "source_product_snow_height": "snow_height_{run_domain}_$yyyy$mm$dd$HH$MM.csv",
+        "outcome_product": "ws.db.$yyyy$mm$dd$HH$MM.nc.gz",
+        "log": "ws_runner_{run_domain}_log.txt"
+      }
+    },
+    "nwp_runner": {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "{run_domain}",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data": "{run_domain}.dem.txt",
+        "grid_data": "nwp_runner_ancillary_{run_domain}_grid.workspace",
+        "geo_data": "nwp_runner_ancillary_{run_domain}_land.workspace",
+        "source_ancillary": "nwp_runner_ancillary_{run_domain}_source_{datetime_ancillary}.workspace",
+        "processing_ancillary": "nwp_runner_ancillary_{run_domain}_processing_{datetime_ancillary}.workspace",
+        "outcome_ancillary": "nwp_runner_ancillary_{run_domain}_outcome_{datetime_ancillary}.workspace",
+        "source_product_rain": "auxhist23_d03_{datetime_source}",
+        "source_product_air_temperature": "auxhist23_d03_{datetime_source}",
+        "source_product_relative_humidity": "auxhist23_d03_{datetime_source}",
+        "source_product_incoming_radiation": "auxhist23_d03_{datetime_source}",
+        "source_product_wind_speed": "auxhist23_d03_{datetime_source}",
+        "outcome_product": "nwp.wrf.{datetime_outcome}.nc",
+        "log": "nwp_runner_{run_domain}_log.txt"
+      }
+    },
+    "nwp_adapter" : {
+      "env_variable": {
+        "run_domain": "RUN_DOMAIN",
+        "run_time_now": "RUN_TIME_NOW",
+        "run_time_step_obs": "RUN_TIME_STEPS_OBS",
+        "run_time_step_for": "RUN_TIME_STEPS_FOR",
+        "run_mount_folder_static": "TARGET_DATA_STATIC",
+        "run_mount_folder_dynamic_raw": "TARGET_DATA_DYNAMIC_RAW",
+        "run_mount_folder_dynamic_processed": "TARGET_DATA_DYNAMIC_PROCESSED"
+      },
+      "local_variable": {
+        "run_domain": "{run_domain}",
+        "run_name": "wrf_deterministic_4_hmc",
+        "run_ens_mode": false,
+        "run_ens_var": "RFarm_ID",
+        "run_ens_min": 1,
+        "run_ens_max": 1,
+        "run_path_root": "/home/fp/",
+        "terrain_data" : "{run_domain}.dem.txt",
+        "grid_data": "{run_domain}_grid_wrf_adapter.workspace",
+        "geo_data": "{run_domain}_geo_wrf_adapter.workspace"
+      }
+    }
+  },
+  "cmd": {
+    "_comment": "command line of defined application(s)",
+    "ws_downloader": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "ws_runner": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "nwp_runner": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    },
+    "nwp_adapter": {
+      "script": ["file_app_main"],
+      "args" : [{
+        "-settings_file":"file_app_configuration_custom",
+        "-time": "time"
+      }]
+    }
+  },
+  "app": {
+    "_comment": "filename(s) runner app main n docker environment",
+    "ws_downloader": {"file_app_main": "hyde_downloader_drops2_ws.py"},
+    "ws_runner": {"file_app_main": "HYDE_DynamicData_GroundNetwork_WS.py"},
+    "nwp_runner": {"file_app_main": "HYDE_DynamicData_NWP_WRF.py"},
+    "nwp_adapter": {"file_app_main": "hyde_adapter_data_splitting_main.py"}
+  },
+  "file" : {
+    "_comment": "filename(s) runner app configuration(s) in docker environment",
+    "ws_downloader": {
+      "file_app_configuration_default": "hyde_configuration_downloader_ws_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_downloader_ws_docker_custom.json",
+      "file_app_log": "hyde_ws_downloader_log_docker.txt"
+    },
+    "ws_runner": {
+      "file_app_configuration_default": "hyde_configuration_runner_ws_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_runner_ws_docker_custom.json",
+      "file_app_log": "hyde_ws_runner_log_docker.txt"
+    },
+    "nwp_runner": {
+      "file_app_configuration_default": "hyde_configuration_nwp_wrf_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_nwp_wrf_docker_custom.json",
+      "file_app_log": "hyde_nwp_runner_log_docker.txt"
+    },
+    "nwp_adapter": {
+      "file_app_configuration_default": "hyde_configuration_data_splitting_docker_default.json",
+      "file_app_configuration_custom": "hyde_configuration_data_splitting_docker_custom.json",
+      "file_app_log": "hyde_nwp_adapter_log_docker.txt"
+    }
+  },
+  "folder" : {
+    "_comment": "folder(s) runner app definition in docker environment",
+    "ws_downloader": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/bin/downloader/ws/drops_2/lexis_docker/"
+    },
+    "ws_runner": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/ground_network/ws/lexis_docker/"
+    },
+    "nwp_runner": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/apps/nwp/wrf/lexis_docker/"
+    },
+    "nwp_adapter": {
+      "folder_app_main": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
+      "folder_app_configuration_custom": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/",
+      "folder_app_configuration_default": "{run_path_root}/fp_package/fp_hyde/bin/adapter/splitting_data/lexis_docker/"
+    }
+  },
+  "lookup_table": {
+    "_comment": "lookup table to update values in configurations file(s) [VAR_ENV 2 JSON]",
+    "ws_downloader": {
+      "run_domain": ["ancillary", "domain"],
+      "run_time_step_obs": ["time","time_period"],
+      "terrain_data": ["data", "static", "land", "file_name"],
+      "source_registry": ["data", "dynamic", "source", "registry", "file_name"],
+      "source_datasets": ["data", "dynamic", "source", "datasets", "file_name"],
+      "destination": ["data", "dynamic", "destination", "file_name"],
+      "log": ["log", "file_name"]
+    },
+    "ws_runner": {
+      "run_domain": ["algorithm", "ancillary", "domain"],
+      "run_time_step_obs": ["data", "dynamic", "time", "time_observed_step"],
+      "terrain_data": ["data", "static", "land", "land_ref", "filename"],
+      "predictor_data_aspect": ["data", "static", "predictor", "aspect_data", "filename"],
+      "predictor_data_hillshade": ["data", "static", "predictor", "hillshade_data", "filename"],
+      "predictor_data_slope": ["data", "static", "predictor", "slope_data", "filename"],
+      "predictor_data_roughness": ["data", "static", "predictor", "roughness_data", "filename"],
+      "grid_ancillary": ["data", "static", "grid_ref", "filename"],
+      "terrain_ancillary": ["data", "static", "land", "land_ancillary", "filename"],
+      "predictor_ancillary": ["data", "static", "predictor", "predictor_ancillary", "filename"],
+      "source_ancillary": ["data", "dynamic", "source", "source_ancillary", "filename"],
+      "outcome_ancillary": ["data", "dynamic", "outcome", "outcome_ancillary", "filename"],
+      "source_product_rain": ["data", "dynamic", "source", "rain_data", "filename"],
+      "source_product_air_temperature": ["data", "dynamic", "source", "air_temperature_data", "filename"],
+      "source_product_relative_humidity": ["data", "dynamic", "source", "relative_humidity_data", "filename"],
+      "source_product_incoming_radiation": ["data", "dynamic", "source", "incoming_radiation_data", "filename"],
+      "source_product_wind_speed": ["data", "dynamic", "source", "wind_data", "filename"],
+      "source_product_air_pressure": ["data", "dynamic", "source", "air_pressure_data", "filename"],
+      "source_product_snow_height": ["data", "dynamic", "source", "snow_height_data", "filename"],
+      "outcome_product": ["data", "dynamic", "outcome", "ws_product", "filename"],
+      "log": ["data", "log", "filename"]
+    },
+    "nwp_runner": {
+      "run_time_step_for": ["data", "dynamic", "time", "time_forecast_period"],
+      "run_domain": ["algorithm","ancillary", "domain"],
+      "terrain_data": ["data", "static", "land", "terrain_data", "filename"],
+      "grid_data": ["data", "static", "land", "grid_data", "filename"],
+      "geo_data": ["data", "static", "land", "geo_data", "filename"],
+      "source_ancillary": ["data", "dynamic", "ancillary", "nwp_source_ancillary", "filename"],
+      "processing_ancillary": ["data", "dynamic", "ancillary", "nwp_processing_ancillary", "filename"],
+      "outcome_ancillary": ["data", "dynamic", "ancillary", "nwp_outcome_ancillary", "filename"],
+      "source_product_rain": ["data", "dynamic", "source", "rain_source_data", "filename"],
+      "source_product_air_temperature": ["data", "dynamic", "source", "air_temperature_source_data", "filename"],
+      "source_product_relative_humidity": ["data", "dynamic", "source", "relative_humidity_source_data", "filename"],
+      "source_product_incoming_radiation": ["data", "dynamic", "source", "incoming_radiation_source_data", "filename"],
+      "source_product_wind_speed": ["data", "dynamic", "source", "wind_source_data", "filename"],
+      "outcome_product": ["data", "dynamic", "outcome", "nwp_outcome_data", "filename"],
+      "log": ["data", "log", "filename"]
+    },
+    "nwp_adapter": {
+      "run_domain": ["algorithm","ancillary", "domain"],
+      "terrain_data": ["data", "static", "land_ref", "filename"],
+      "grid_data": ["data", "static", "grid_ref", "filename"],
+      "geo_data": ["data", "static", "land_ancillary","filename"]
+    }
+  }
+}
