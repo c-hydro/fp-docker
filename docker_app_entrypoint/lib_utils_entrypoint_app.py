@@ -45,26 +45,33 @@ def filter_entrypoint_app(app_fields_generic, tag_root_fields='app_settings',
                             value_obj_def = {}
                             for value_key, value_data in values_obj_raw.items():
 
-                                if isinstance(value_data, bool):
-                                    obj_def = deepcopy(value_data)
-                                elif isinstance(value_data, list):
-                                    obj_list = deepcopy(value_data)
+                                if value_data:
+                                    if isinstance(value_data, bool):
+                                        obj_def = deepcopy(value_data)
+                                    elif isinstance(value_data, int):
+                                        obj_def = deepcopy(value_data)
+                                    elif isinstance(value_data, float):
+                                        obj_def = deepcopy(value_data)
+                                    elif isinstance(value_data, list):
+                                        obj_list = deepcopy(value_data)
 
-                                    obj_def = []
-                                    for obj_step in obj_list:
-                                        obj_tmp, tag_list_tmp, value_list_tmp, type_list_tmp = fill_tags2string(
-                                            obj_step, template_keys, template_values)
-                                        obj_def.append(obj_tmp)
+                                        obj_def = []
+                                        for obj_step in obj_list:
+                                            obj_tmp, tag_list_tmp, value_list_tmp, type_list_tmp = fill_tags2string(
+                                                obj_step, template_keys, template_values)
+                                            obj_def.append(obj_tmp)
 
-                                else:
-                                    obj_tmp, tag_list_tmp, value_list_tmp, type_list_tmp = fill_tags2string(
-                                        value_data, template_keys, template_values)
-                                    if type_list_tmp.__len__() == 1 and type_list_tmp[0] == 'integer':
-                                        obj_def = int(obj_tmp)
-                                    elif type_list_tmp.__len__() == 1 and type_list_tmp[0] == 'float':
-                                        obj_def = float(obj_tmp)
                                     else:
-                                        obj_def = deepcopy(obj_tmp)
+                                        obj_tmp, tag_list_tmp, value_list_tmp, type_list_tmp = fill_tags2string(
+                                            value_data, template_keys, template_values)
+                                        if type_list_tmp.__len__() == 1 and type_list_tmp[0] == 'integer':
+                                            obj_def = int(obj_tmp)
+                                        elif type_list_tmp.__len__() == 1 and type_list_tmp[0] == 'float':
+                                            obj_def = float(obj_tmp)
+                                        else:
+                                            obj_def = deepcopy(obj_tmp)
+                                else:
+                                    obj_def = deepcopy(value_data)
                                 value_obj_def[value_key] = obj_def
                         elif isinstance(values_obj_raw, str):
                             value_obj_def = deepcopy(values_obj_raw)

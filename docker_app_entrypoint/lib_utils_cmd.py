@@ -127,7 +127,7 @@ def execute_cmd(command_line):
         log_stream.info(' -----> Process execution [' + command_line + '] ... ')
 
         # Check command-line calling
-        subprocess.check_call(command_line, shell=True)
+        # subprocess.check_call(command_line, shell=True)
         # Execute command-line calling
         return_code = subprocess.call(command_line, shell=True)
 
