@@ -123,7 +123,8 @@ def organize_entrypoint_variable(
                 if var_field_env in list(os.environ.keys()):
 
                     var_value_raw = os.environ[var_field_env]
-                    var_value_def = check_var_type(var_value_raw, var_type)
+                    var_value_stripped = var_value_raw.strip("'\\'")
+                    var_value_def = check_var_type(var_value_stripped, var_type)
                     obj_entrypoint_variable[var_name] = var_value_def
 
                 else:
