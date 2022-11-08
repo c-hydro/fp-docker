@@ -128,7 +128,7 @@ RUN cp -r /tmp/package_hmc/. ${fp_folder_package_hmc}
 # -----------------------------------------------------------------
 # INSTALL - DOCKER PYTHON ENTRYPOINT
 # get hmc python package from github repository
-RUN git clone https://github.com/c-hydro/fp-docker.git --branch v2.0.0 --single-branch /tmp/package_docker
+RUN git clone --depth=1 https://github.com/c-hydro/fp-docker.git --branch v2.0.0 --single-branch /tmp/package_docker
 # copy files from tmp to container folder(s)
 RUN cp -r /tmp/package_docker/docker_app_entrypoint/. ${fp_folder_entrypoint} 
 RUN cp -r /tmp/package_docker/docker_file_template/. ${fp_folder_entrypoint} 
