@@ -1,0 +1,167 @@
+# -----------------------------------------------------------------
+# SET - DOCKER GENERIC SETTINGS
+# start from base -- builder
+FROM ubuntu:20.04 as builder
+
+# label(s)
+LABEL maintainer="Fabio Delogu"
+LABEL email="fabio.delogu@cimafoundation.org"
+LABEL version="2.0.0"
+LABEL release_date="2022/10/14"
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# SET - DOCKER GENERIC LIBRARIES
+# change default shell (from sh to bash)
+SHELL ["/bin/bash", "-c"]
+
+# set geographical area
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Rome
+
+# install system-wide deps 
+RUN apt-get update && apt-get install -y \
+	git \
+	gfortran \
+	gcc \
+	m4 \
+	g++ \
+	make \
+	mc \
+	curl \
+	build-essential \
+	wget \
+	cmake \
+	libcurl4-openssl-dev \
+	tzdata \
+	openjdk-8-jdk \
+	bash-completion
+
+# set user and workdir check
+ENV user fp
+RUN useradd --system --create-home --home-dir /home/${user} --shell /bin/bash ${user} 
+RUN chown -R ${user} /home/${user}
+WORKDIR /home/${user}
+USER ${user}
+RUN pwd
+
+# set environment folder(s)
+ENV fp_folder_entrypoint /home/fp/entrypoint/
+ENV fp_folder_libs_installer /home/fp/library/libs_installer/
+ENV fp_folder_libs_system /home/fp/library/libs_system/
+ENV fp_folder_libs_python /home/fp/library/libs_python/
+ENV fp_folder_package_hmc /home/fp/library/package_hmc/
+ENV fp_folder_mount_in /home/fp/mnt_in/
+ENV fp_folder_mount_out /home/fp/mnt_out/
+
+# set environment filename(s)
+ENV fp_file_env_system fp_env_system
+ENV fp_file_env_python fp_env_python3_hmc_settings
+ENV fp_folder_env_python fp_system_conda_python3_hmc_libraries
+ENV fp_requirements_env_python requirements_fp_system_conda_python_hmc.yaml
+
+# create folder
+RUN mkdir -p ${fp_folder_libs_installer}
+RUN mkdir -p ${fp_folder_package_hmc}
+RUN mkdir -p ${fp_folder_entrypoint}
+RUN mkdir -p ${fp_folder_mount_in}
+RUN mkdir -p ${fp_folder_mount_out}
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# INSTALL - DOCKER SYSTEM LIBRARIES
+# clone library from github repository
+RUN git clone https://github.com/c-hydro/fp-system-library.git --branch v1.6.3 --single-branch /tmp/libs_system/
+# copy files from tmp to container folder(s)
+RUN cp -r /tmp/libs_system/. ${fp_folder_libs_installer} 
+
+# start installer script for system libraries
+WORKDIR ${fp_folder_libs_installer}
+RUN pwd
+RUN ./setup_fp_system_library_hmc.sh ${fp_folder_libs_system} ${fp_file_env_system}
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# INSTALL - DOCKER SYSTEM APPS
+# clone library from github repository
+RUN git clone https://github.com/c-hydro/fp-system-app.git --branch v1.6.3 --single-branch /tmp/app_system/
+# copy files from tmp to container folder(s)
+RUN cp -rf /tmp/app_system/. ${fp_folder_libs_installer} 
+
+# start installer script for hmc libraries
+WORKDIR ${fp_folder_libs_installer}
+RUN pwd
+RUN ./setup_fp_system_app_hmc.sh ${fp_folder_libs_system} ${fp_file_env_system} ${fp_folder_libs_system}
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# INSTALL - DOCKER PYTHON ENVS
+# clone library from github repository
+RUN git clone https://github.com/c-hydro/fp-system-env.git --branch v1.6.3 --single-branch /tmp/env_system
+# copy files from tmp to container folder(s)
+RUN cp -r /tmp/env_system/. ${fp_folder_libs_installer} 
+
+# start installer script for python libraries
+WORKDIR ${fp_folder_libs_installer}
+RUN pwd
+RUN ./setup_fp_system_conda_python_hmc.sh ${fp_folder_libs_python} ${fp_file_env_python} ${fp_folder_env_python} ${fp_requirements_env_python}
+
+# set environmental variable(s) appending in .bashrc
+RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.bashrc
+RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.bashrc
+RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.bashrc
+# set environmental variable(s) appending in .profile
+RUN echo "source ${fp_folder_libs_system}/${fp_file_env_system}" >> /home/fp/.profile
+RUN echo "source ${fp_folder_libs_python}/${fp_file_env_python}" >> /home/fp/.profile
+RUN echo "export PYTHONPATH="'${PYTHONPATH}'":/${fp_folder_package_hmc}" >> /home/fp/.profile
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# INSTALL - DOCKER PYTHON PACKAGES
+# clone library from github repository
+WORKDIR ${fp_folder_entrypoint}
+RUN git clone https://github.com/c-hydro/fp-hmc.git --branch v3.1.5 --single-branch /tmp/package_hmc
+# copy files from tmp to container folder(s)
+RUN cp -r /tmp/package_hmc/. ${fp_folder_package_hmc} 
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# INSTALL - DOCKER PYTHON ENTRYPOINT
+# get hmc python package from github repository
+RUN git clone https://github.com/c-hydro/fp-docker.git --branch v2.0.0 --single-branch /tmp/package_docker
+# copy files from tmp to container folder(s)
+RUN cp -r /tmp/package_docker/docker_app_entrypoint/. ${fp_folder_entrypoint} 
+RUN cp -r /tmp/package_docker/docker_file_template/. ${fp_folder_entrypoint} 
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# MOUNT - DOCKER SOURCE AND DESTINATION FOLDER(S)
+# prepare share folder(s) to mount external repositories
+ENV fp_folder_mount_static /home/fp/mnt_in/data_static/
+ENV fp_folder_mount_dyn_source /home/fp/mnt_in/data_dynamic/
+ENV fp_folder_mount_dyn_restart /home/fp/mnt_in/model_restart/
+
+USER ${user}
+ENV fp_folder_mount_dyn_destination /home/fp/mnt_out/model_results/
+ENV fp_folder_mount_dyn_state /home/fp/mnt_out/model_state/
+
+# create folder(s)
+RUN mkdir -p ${fp_folder_mount_static}
+RUN mkdir -p ${fp_folder_mount_dyn_source}
+RUN mkdir -p ${fp_folder_mount_dyn_restart}
+RUN mkdir -p ${fp_folder_mount_dyn_destination}
+RUN mkdir -p ${fp_folder_mount_dyn_state}
+
+# change permission
+RUN chown fp -R ${fp_folder_mount_dyn_destination}
+RUN chown fp -R ${fp_folder_mount_dyn_state}
+# -----------------------------------------------------------------
+
+# -----------------------------------------------------------------
+# SET - DOCKER ENTRYPOINT
+# set entrypoint
+WORKDIR ${fp_folder_entrypoint}
+ENTRYPOINT ${fp_folder_entrypoint}"fp_docker_entrypoint_app_main.sh"
+CMD []
+# -----------------------------------------------------------------
+

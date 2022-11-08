@@ -1,0 +1,85 @@
+# ------------------------------------------------------------------------------
+# DOCKER - Configuration Steps
+# https://docs.docker.com/install/linux/docker-ce/ubuntu/
+# https://stackoverflow.com/questions/48583527/docker-build-error-bin-sh-1-apt-get-not-found
+# https://stackoverflow.com/questions/44769315/how-to-see-docker-image-contents
+# https://devops.ionos.com/tutorials/configure-a-docker-container-to-automatically-pull-from-github-using-oauth/#create-github-oauth-token
+# https://vsupalov.com/build-docker-image-clone-private-repo-ssh-key/
+# https://docs.docker.com/install/linux/linux-postinstall/
+# https://medium.com/@ismailyenigul/enable-docker-command-line-auto-completion-in-bash-on-centos-ubuntu-5f1ac999a8a6
+
+# Useful link(s):
+# constraining resources: https://docs.docker.com/config/containers/resource_constraints/
+# mount NFS drive: https://forums.docker.com/t/how-to-mount-nfs-drive-in-container-simplest-way/46699
+# how to use your own registry: https://www.docker.com/blog/how-to-use-your-own-registry/
+# https://github.com/quba42
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Get GitHub token:
+3a99fb49454e54c836f69cca7b1c6034c32f798a
+# Write git clone using the token:
+git clone -b docker https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-envs.git /fp_envs/
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Manage Docker as a non-root user
+
+## Create the docker group.
+sudo groupadd docker
+
+## Add your user to the docker group.
+sudo usermod -aG docker $USER
+
+## Activate the changes to groups:
+newgrp docker 
+
+## Fix error
+## WARNING: Error loading config file: /home/user/.docker/config.json - 
+## stat /home/user/.docker/config.json: permission denied
+sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
+sudo chmod g+rwx "$HOME/.docker" -R
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Build container
+sudo docker build -t c-hydro/fp_framework .
+
+# View image in repositories
+sudo docker images
+
+# Explore the content of image (using bash interpreter)
+sudo docker run -it --entrypoint bash c-hydro/fp_framework
+
+# Remove all container(s)
+sudo docker rm $(sudo docker ps -a -q -f status=exited)
+
+# Remove all images, containers ...
+docker system prune -a --volumes
+
+# Copy files from docker to host
+docker cp <containerId>:/file/path/within/container /host/path/target
+## To find containerId
+docker ps
+## An example
+docker cp 84f6931f1902:/home/fp/fp_run/ /home/fabio/fp/
+
+# check if docker image exists
+docker image inspect myimage:mytag
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Bash
+# Place the completion script in /etc/bash_completion.d/ as follows:
+curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
+# ------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
