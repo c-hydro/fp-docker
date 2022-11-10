@@ -154,7 +154,7 @@
           "data_static:shapefile:folder_name": "{run_mount_folder_static}/shapefile/",
 
           "data_summary:collections:file_name" : "hmc.collections.{dset_datetime_summary}.nc",
-          "data_summary:collections:folder_name" : "{run_mount_folder_dynamic_destination}/collections/",
+          "data_summary:collections:folder_name" : "{run_mount_folder_dynamic_destination}/model_results/collections/",
           "data_summary:time_series:file_name:discharge" : "hydrograph_{string_var_name_summary_section}_{string_var_name_summary_basin}_{dset_datetime_summary}.json",
           "data_summary:time_series:folder_name:discharge" : "{run_mount_folder_dynamic_destination}/model_results/collections/",
           "data_summary:time_series:file_name:dam_volume" : "damv_{string_var_name_summary_dam}_{dset_datetime_summary}.json",
