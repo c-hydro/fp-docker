@@ -133,23 +133,22 @@ RUN git clone --depth=1 https://github.com/c-hydro/fp-docker.git --branch v2.0.0
 RUN cp -r /tmp/package_docker/docker_app_entrypoint/. ${fp_folder_entrypoint} 
 RUN cp -r /tmp/package_docker/docker_file_template/. ${fp_folder_entrypoint} 
 # -----------------------------------------------------------------
-WORKDIR ${fp_folder_entrypoint}
-WORKDIR ${fp_folder_entrypoint}
 
 # -----------------------------------------------------------------
 # MOUNT - DOCKER SOURCE AND DESTINATION FOLDER(S)
 # prepare share folder(s) to mount external repositories
-#ENV fp_folder_mount_static /home/fp/mnt_in/data_static/
-#ENV fp_folder_mount_dyn_source /home/fp/mnt_in/data_dynamic/
-#ENV fp_folder_mount_dyn_restart /home/fp/mnt_in/model_restart/
-#ENV fp_folder_mount_dyn_destination /home/fp/mnt_out/
+ENV fp_folder_mount_static /home/fp/mnt_in/data_static/
+ENV fp_folder_mount_dyn_source /home/fp/mnt_in/data_dynamic/
+ENV fp_folder_mount_dyn_restart /home/fp/mnt_in/model_restart/
+ENV fp_folder_mount_dyn_destination /home/fp/mnt_out/model_results/
+ENV fp_folder_mount_dyn_state /home/fp/mnt_out/model_state/
 
 # create folder(s)
-#RUN mkdir -p ${fp_folder_mount_static}
-#RUN mkdir -p ${fp_folder_mount_dyn_source}
-#RUN mkdir -p ${fp_folder_mount_dyn_restart}
-#RUN mkdir -p ${fp_folder_mount_dyn_destination}
-#RUN mkdir -p ${fp_folder_mount_dyn_state}
+RUN mkdir -p ${fp_folder_mount_static}
+RUN mkdir -p ${fp_folder_mount_dyn_source}
+RUN mkdir -p ${fp_folder_mount_dyn_restart}
+RUN mkdir -p ${fp_folder_mount_dyn_destination}
+RUN mkdir -p ${fp_folder_mount_dyn_state}
 # -----------------------------------------------------------------
 
 # -----------------------------------------------------------------

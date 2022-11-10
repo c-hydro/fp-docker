@@ -1,5 +1,7 @@
 # ------------------------------------------------------------------------------
-# DOCKER - Configuration Steps
+### DOCKER CMD SETTINGS ###
+
+## CONFIGURATION LINK(S)
 # https://docs.docker.com/install/linux/docker-ce/ubuntu/
 # https://stackoverflow.com/questions/48583527/docker-build-error-bin-sh-1-apt-get-not-found
 # https://stackoverflow.com/questions/44769315/how-to-see-docker-image-contents
@@ -8,18 +10,14 @@
 # https://docs.docker.com/install/linux/linux-postinstall/
 # https://medium.com/@ismailyenigul/enable-docker-command-line-auto-completion-in-bash-on-centos-ubuntu-5f1ac999a8a6
 
-# Useful link(s):
+## OTHER LINK(S)
 # constraining resources: https://docs.docker.com/config/containers/resource_constraints/
 # mount NFS drive: https://forums.docker.com/t/how-to-mount-nfs-drive-in-container-simplest-way/46699
 # how to use your own registry: https://www.docker.com/blog/how-to-use-your-own-registry/
-# https://github.com/quba42
-# ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# Get GitHub token:
-3a99fb49454e54c836f69cca7b1c6034c32f798a
-# Write git clone using the token:
-git clone -b docker https://3a99fb49454e54c836f69cca7b1c6034c32f798a:x-oauth-basic@github.com/c-hydro/fp-envs.git /fp_envs/
+## EXAMPLE GITHUB REPOSITORIES
+# https://github.com/quba42
+https://github.com/NCAR/WRF_DOCKE
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
@@ -37,6 +35,7 @@ newgrp docker
 ## Fix error
 ## WARNING: Error loading config file: /home/user/.docker/config.json - 
 ## stat /home/user/.docker/config.json: permission denied
+## Folder .docker could be not exist ... mcdir -p .docker in the HOME
 sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
 sudo chmod g+rwx "$HOME/.docker" -R
 # ------------------------------------------------------------------------------

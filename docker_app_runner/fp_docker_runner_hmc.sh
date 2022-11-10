@@ -101,20 +101,17 @@ image_docker_reference="${image_docker_name}/${image_docker_tag}"
 # Start info
 echo " ===> Run container '${image_docker_reference}:${image_docker_version}' ... "
 
-
 # Run docker
 docker run ${container_extra_opts}\
 	--name=${container_name}\
  	-e APP_MAIN=${image_app_entrypoint_main} -e APP_CONFIG=${image_app_entrypoint_configuration}\
- 	--rm \
+ 	--rm\
  	--env-file ${container_env_file}\
  	--workdir ${container_workdir}\
- 	--mount type=bind,source=${SOURCE_DATA_STATIC},target=${TARGET_DATA_STATIC}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_RESTART},target=${TARGET_DATA_DYNAMIC_RESTART}\
-	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_SOURCE},target=${TARGET_DATA_DYNAMIC_SOURCE}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_DESTINATION},target=${TARGET_DATA_DYNAMIC_DESTINATION}\
- 	--mount type=bind,source=${SOURCE_DATA_DYNAMIC_STATE},target=${TARGET_DATA_DYNAMIC_STATE}\
- 	${image_docker_reference}:${image_docker_version}
+	-v dte_volume_src:/home/fp/mnt_in/:Z \
+	-v dte_volume_dst:/home/fp/mnt_out/:Z \
+	${image_docker_reference}:${image_docker_version} 
+
 
 # End info
 echo " ===> Run container '$image_docker_reference' ... OK"
