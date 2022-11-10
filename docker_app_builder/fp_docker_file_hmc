@@ -140,8 +140,6 @@ RUN cp -r /tmp/package_docker/docker_file_template/. ${fp_folder_entrypoint}
 ENV fp_folder_mount_static /home/fp/mnt_in/data_static/
 ENV fp_folder_mount_dyn_source /home/fp/mnt_in/data_dynamic/
 ENV fp_folder_mount_dyn_restart /home/fp/mnt_in/model_restart/
-
-USER ${user}
 ENV fp_folder_mount_dyn_destination /home/fp/mnt_out/model_results/
 ENV fp_folder_mount_dyn_state /home/fp/mnt_out/model_state/
 
@@ -151,10 +149,6 @@ RUN mkdir -p ${fp_folder_mount_dyn_source}
 RUN mkdir -p ${fp_folder_mount_dyn_restart}
 RUN mkdir -p ${fp_folder_mount_dyn_destination}
 RUN mkdir -p ${fp_folder_mount_dyn_state}
-
-# change permission
-RUN chown fp -R ${fp_folder_mount_dyn_destination}
-RUN chown fp -R ${fp_folder_mount_dyn_state}
 # -----------------------------------------------------------------
 
 # -----------------------------------------------------------------
@@ -162,6 +156,7 @@ RUN chown fp -R ${fp_folder_mount_dyn_state}
 # set entrypoint
 WORKDIR ${fp_folder_entrypoint}
 ENTRYPOINT ${fp_folder_entrypoint}"fp_docker_entrypoint_app_main.sh"
+USER ${user}
 CMD []
 # -----------------------------------------------------------------
 

@@ -1,3 +1,6 @@
+docker volume create dte_volume_in
+docker volume create dte_volume_out
+
 docker volume inspect dte_volume_in
 
 docker container create --name dummy_dte -v dte_volume_in:/data c-hydro/fp_framework_hmc:dte
@@ -6,8 +9,23 @@ docker cp -r /home/fp/data/data_dynamic/ dummy_dte:/data/
 docker cp -r /home/fp/data/model_restart/ dummy_dte:/data/
 docker rm dummy_dte
 
+docker volume create --name dte_volume_src --opt type=none --opt device=/home/fp/volume_source/ --opt o=bind
+docker volume create --name dte_volume_dst --opt type=none --opt device=/home/fp/volume_destination/ --opt o=bind
 
-docker run -d -e APP_MAIN=fp_docker_entrypoint_app_main.py -it --entrypoint=bash -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc_dte.json --rm --name=hmc --env-file fp_docker_variables_runner_hmc_example.env --mount source=dte_volume_in,target=/home/fp/mnt_in/ --mount source=dte_volume_in,target=/home/fp/mnt_out/ c-hydro/fp_framework_hmc:dte 
+
+sudo docker run -it --entrypoint=bash --rm c-hydro/fp_framework_hmc:dte id fp
+
+docker run -d -e APP_MAIN=fp_docker_entrypoint_app_main.py -it --entrypoint=bash -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc_dte.json --rm --name=hmc --env-file fp_docker_variables_runner_hmc_example.env --mount source=dte_volume_in,target=/home/fp/mnt_in/ --mount source=dte_volume_dst,target=/home/fp/mnt_out/ c-hydro/fp_framework_hmc:dte 
 
 
-docker run -e APP_MAIN=fp_docker_entrypoint_app_main.py -it --entrypoint=bash -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc_dte.json --rm --name=hmc --env-file fp_docker_variables_runner_hmc_example.env --mount source=dte_volume_in,target=/home/fp/mnt_in/ --mount source=dte_volume_in,target=/home/fp/mnt_out/ c-hydro/fp_framework_hmc:dte 
+docker run -d -e APP_MAIN=fp_docker_entrypoint_app_main.py -it --entrypoint=bash -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc_dte.json --rm --name=hmc --env-file fp_docker_variables_runner_hmc_example.env -v dte_volume_in:/home/fp/mnt_in/:Z -v dte_volume_out:/home/fp/mnt_out/:Z c-hydro/fp_framework_hmc:dte 
+
+docker run -e APP_MAIN=fp_docker_entrypoint_app_main.py -it --entrypoint=bash -e APP_CONFIG=fp_docker_entrypoint_app_configuration_hmc_dte.json --rm --name=hmc --env-file fp_docker_variables_runner_hmc_example.env -v dte_volume_src:/home/fp/mnt_in/:Z -v dte_volume_dst:/home/fp/mnt_out/:Z c-hydro/fp_framework_hmc:dte 
+
+docker inspect hmc
+
+cd 
+
+
+
+

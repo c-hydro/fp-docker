@@ -64,7 +64,7 @@
       "run_path_template": "../docker_file_template/"
     },
     "log": {
-      "file_name": "docker_entrypoint_log.txt",
+      "file_name": "docker_hmc_entrypoint_log.txt",
       "folder_name": "{run_path_root}/log/"
     }
   },
@@ -134,7 +134,8 @@
           "flag:phys:convolution_type": 1,
           "tmp:file_name": null,
           "tmp:folder_name": "{run_path_root}/tmp/",
-          "log:file_name": "hmc_runner_docker_execution.txt",
+          "tmp:cleaning_active": false,
+          "log:file_name": "docker_hmc_execution_log.txt",
           "log:folder_name": "{run_path_root}/log/"
         },
         "script_variable:datasets" : {
@@ -155,11 +156,11 @@
           "data_summary:collections:file_name" : "hmc.collections.{dset_datetime_summary}.nc",
           "data_summary:collections:folder_name" : "{run_mount_folder_dynamic_destination}/collections/",
           "data_summary:time_series:file_name:discharge" : "hydrograph_{string_var_name_summary_section}_{string_var_name_summary_basin}_{dset_datetime_summary}.json",
-          "data_summary:time_series:folder_name:discharge" : "{run_mount_folder_dynamic_destination}/collections/",
+          "data_summary:time_series:folder_name:discharge" : "{run_mount_folder_dynamic_destination}/model_results/collections/",
           "data_summary:time_series:file_name:dam_volume" : "damv_{string_var_name_summary_dam}_{dset_datetime_summary}.json",
-          "data_summary:time_series:folder_name:dam_volume" : "{run_mount_folder_dynamic_destination}/collections/",
+          "data_summary:time_series:folder_name:dam_volume" : "{run_mount_folder_dynamic_destination}/model_results/collections/",
           "data_summary:time_series:file_name:dam_level" : "daml_{string_var_name_summary_dam}_{dset_datetime_summary}.json",
-          "data_summary:time_series:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/collections/",
+          "data_summary:time_series:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/model_results/collections/",
 
           "data_ancillary:static:file_name" : "hmc.static.workspace",
           "data_ancillary:static:folder_name" : "{run_path_root}/app/exec/",
@@ -193,39 +194,39 @@
           "data_dynamic:gridded:outcome:hmc:file_name": "hmc.output-grid.{dset_datetime_hmc}.nc.gz",
           "data_dynamic:gridded:outcome:hmc:folder_name": "{run_path_root}/app/model_results/gridded/{dset_sub_path_hmc}",
           "data_dynamic:gridded:outcome:mnt:file_name": "hmc.output-grid.{dset_datetime_hmc}.nc.gz",
-          "data_dynamic:gridded:outcome:mnt:folder_name": "{run_mount_folder_dynamic_destination}/gridded/",
+          "data_dynamic:gridded:outcome:mnt:folder_name": "{run_mount_folder_dynamic_destination}/model_results/gridded/{dset_sub_path_outcome}/",
 
           "data_dynamic:point:outcome:hmc:file_name": "hmc.{dset_var_name_outcome_point}.{dset_datetime_hmc}.txt",
           "data_dynamic:point:outcome:hmc:folder_name": "{run_path_root}/app/model_results/point/{dset_sub_path_hmc}",
           "data_dynamic:point:outcome:mnt:file_name:discharge": "hmc.{dset_var_name_outcome_point}.{dset_datetime_outcome}.txt",
-          "data_dynamic:point:outcome:mnt:folder_name:discharge": "{run_mount_folder_dynamic_destination}/point/discharge/",
+          "data_dynamic:point:outcome:mnt:folder_name:discharge": "{run_mount_folder_dynamic_destination}/model_results/point/discharge/{dset_sub_path_outcome}/",
           "data_dynamic:point:outcome:mnt:file_name:dam_volume": "hmc.{dset_var_name_outcome_point}.{dset_datetime_outcome}.txt",
-          "data_dynamic:point:outcome:mnt:folder_name:dam_volume": "{run_mount_folder_dynamic_destination}/point/dam_volume/",
+          "data_dynamic:point:outcome:mnt:folder_name:dam_volume": "{run_mount_folder_dynamic_destination}/model_results/point/dam_volume/{dset_sub_path_outcome}/",
           "data_dynamic:point:outcome:mnt:file_name:dam_level": "hmc.{dset_var_name_outcome_point}.{dset_datetime_outcome}.txt",
-          "data_dynamic:point:outcome:mnt:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/point/dam_level/",
+          "data_dynamic:point:outcome:mnt:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/model_results/point/dam_level/{dset_sub_path_outcome}/",
           "data_dynamic:point:outcome:mnt:file_name:analysis": "hmc.{dset_var_name_outcome_point}.{dset_datetime_outcome}.txt",
-          "data_dynamic:point:outcome:mnt:folder_name:analysis": "{run_mount_folder_dynamic_destination}/point/analysis/",
+          "data_dynamic:point:outcome:mnt:folder_name:analysis": "{run_mount_folder_dynamic_destination}/model_results/point/analysis/{dset_sub_path_outcome}/",
 
           "data_dynamic:time_series:outcome:hmc:file_name": "hmc.{dset_var_name_outcome_ts}.txt",
           "data_dynamic:time_series:outcome:hmc:folder_name": "{run_path_root}/app/model_results/time_series/",
           "data_dynamic:time_series:outcome:mnt:file_name:discharge": "hmc.hydrograph.txt",
-          "data_dynamic:time_series:outcome:mnt:folder_name:discharge": "{run_mount_folder_dynamic_destination}/time_series/",
+          "data_dynamic:time_series:outcome:mnt:folder_name:discharge": "{run_mount_folder_dynamic_destination}/model_results/time_series/",
           "data_dynamic:time_series:outcome:mnt:file_name:dam_volume": "hmc.vdam.txt",
-          "data_dynamic:time_series:outcome:mnt:folder_name:dam_volume": "{run_mount_folder_dynamic_destination}/time_series/",
+          "data_dynamic:time_series:outcome:mnt:folder_name:dam_volume": "{run_mount_folder_dynamic_destination}/model_results/time_series/",
           "data_dynamic:time_series:outcome:mnt:file_name:dam_level": "hmc.ldam.txt",
-          "data_dynamic:time_series:outcome:mnt:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/time_series/",
+          "data_dynamic:time_series:outcome:mnt:folder_name:dam_level": "{run_mount_folder_dynamic_destination}/model_results/time_series/",
           "data_dynamic:time_series:outcome:mnt:file_name:analysis": "hmc.var-analysis.txt",
-          "data_dynamic:time_series:outcome:mnt:folder_name:analysis": "{run_mount_folder_dynamic_destination}/time_series/",
+          "data_dynamic:time_series:outcome:mnt:folder_name:analysis": "{run_mount_folder_dynamic_destination}/model_results/time_series/",
 
           "data_dynamic:gridded:state:hmc:file_name": "hmc.state-grid.{dset_datetime_hmc}.nc.gz",
           "data_dynamic:gridded:state:hmc:folder_name": "{run_path_root}/app/model_state/gridded/{dset_sub_path_hmc}",
           "data_dynamic:gridded:state:mnt:file_name": "hmc.state-grid.{dset_datetime_hmc}.nc.gz",
-          "data_dynamic:gridded:state:mnt:folder_name": "{run_mount_folder_dynamic_destination}/gridded/{dset_sub_path_state}/",
+          "data_dynamic:gridded:state:mnt:folder_name": "{run_mount_folder_dynamic_destination}/model_state/gridded/{dset_sub_path_state}/",
 
           "data_dynamic:point:state:hmc:file_name": "hmc.state-point.{dset_datetime_hmc}.txt",
           "data_dynamic:point:state:hmc:folder_name": "{run_path_root}/app/model_state/point/{dset_sub_path_hmc}",
           "data_dynamic:point:state:mnt:file_name": "hmc.state-point.{dset_datetime_hmc}.txt",
-          "data_dynamic:point:state:mnt:folder_name": "{run_mount_folder_dynamic_destination}/point/{dset_sub_path_state}/",
+          "data_dynamic:point:state:mnt:folder_name": "{run_mount_folder_dynamic_destination}/model_state/point/{dset_sub_path_state}/",
 
           "data_dynamic:gridded:restart:hmc:file_name": "hmc.state-grid.{dset_datetime_hmc}.nc.gz",
           "data_dynamic:gridded:restart:hmc:folder_name": "{run_path_root}/app/model_restart/",
@@ -265,6 +266,7 @@
           "flag:phys:convolution_type" : ["HMC_Info", "hmc_flags", "flag_phys_convolution_type"],
           "tmp:file_name" : ["Run_Info", "run_location", "tmp", "file_name"],
           "tmp:folder_name" : ["Run_Info", "run_location", "tmp", "file_folder"],
+          "tmp:cleaning_active": ["Run_Info", "run_location", "tmp", "cleaning_active"],
           "log:file_name" : ["Run_Info", "run_location", "log", "file_name"],
           "log:folder_name" : ["Run_Info", "run_location", "log", "file_folder"]
         },

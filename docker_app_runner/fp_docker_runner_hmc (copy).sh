@@ -102,6 +102,8 @@ image_docker_reference="${image_docker_name}/${image_docker_tag}"
 echo " ===> Run container '${image_docker_reference}:${image_docker_version}' ... "
 
 
+
+
 # Run docker
 docker run ${container_extra_opts}\
 	--name=${container_name}\

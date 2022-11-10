@@ -96,7 +96,8 @@
       },
       "tmp": {
         "file_folder": null,
-        "file_name": null
+        "file_name": null,
+        "cleaning_active": false
       },
       "library": {
         "file_folder": null,
