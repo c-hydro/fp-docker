@@ -1,0 +1,21 @@
+# ACCOUNT HYDRO --> COLLEGATO CON IL DOCKER HUB DI CIMAFOUNDATION
+user: hydrocima
+pass: docker4cima
+email: hydrology_hydraulics@cimafoundation.org
+
+# ACCOUNT PERSONALE
+user: fabiodelogu
+pass: docker4cima
+email: fabio.delogu@cimafoundation.org
+
+# PUSH DOCKER TO THE CIMAFOUNDATION ACCOUNT IN C-HYDRO REPOSITORY
+docker push cimafoundation/c-hydro:tagname
+docker push cimafoundation/c-hydro
+
+# PUSH THE LOCAL IMAGE ON THE DOCKER HUB
+docker login (PRIMA SCOLLEGARSI DALLA PAGINA WEB DI DOCKER-HUB)
+docker tag c-hydro/fp_framework_hmc:dte cimafoundation/c-hydro:dte
+docker push cimafoundation/c-hydro:dte
+
+# DOCKER HUB LINK(S)
+https://docs.docker.com/docker-hub/repos/

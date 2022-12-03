@@ -271,7 +271,7 @@
           "log:folder_name" : ["Run_Info", "run_location", "log", "file_folder"]
         },
         "fields:datasets": {
-          "info:domain_name": ["DataGeo", "shapefile", "hmc_file_filter", "DOMAIN"],
+          "info:domain_name": ["DataGeo", "Shapefile", "hmc_file_filter", "DOMAIN"],
 
           "data_static:gridded:file_name": ["DataGeo", "Gridded", "hmc_file_name"],
           "data_static:gridded:folder_name": ["DataGeo", "Gridded", "hmc_file_folder"],

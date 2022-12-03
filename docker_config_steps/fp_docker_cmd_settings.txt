@@ -15,6 +15,9 @@
 # mount NFS drive: https://forums.docker.com/t/how-to-mount-nfs-drive-in-container-simplest-way/46699
 # how to use your own registry: https://www.docker.com/blog/how-to-use-your-own-registry/
 
+# DOCKER HUB LINK(S)
+https://docs.docker.com/docker-hub/repos/
+
 ## EXAMPLE GITHUB REPOSITORIES
 # https://github.com/quba42
 https://github.com/NCAR/WRF_DOCKE

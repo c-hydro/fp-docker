@@ -107,7 +107,8 @@ def fill_tags2string(string_raw, tags_format=None, tags_filling=None, tags_templ
                                 tag_dict_value = value_filling
 
                             if tag_dict_value is None:
-                                print('ciao')
+                                tag_dict_undef = '{' + tag_dict_key + '}'
+                                string_filled_step = string_filled_step.replace(tag_dict_key, tag_dict_undef)
 
                             if tag_dict_value:
                                 string_filled_step = string_filled_step.replace(tag_dict_key, tag_dict_value)
