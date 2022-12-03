@@ -147,8 +147,8 @@ ENV fp_folder_mount_dyn_state /home/fp/mnt_out/model_state/
 RUN mkdir -p ${fp_folder_mount_static}
 RUN mkdir -p ${fp_folder_mount_dyn_source}
 RUN mkdir -p ${fp_folder_mount_dyn_restart}
-RUN mkdir -p ${fp_folder_mount_dyn_destination}
-RUN mkdir -p ${fp_folder_mount_dyn_state}
+#RUN mkdir -p ${fp_folder_mount_dyn_destination}
+#RUN mkdir -p ${fp_folder_mount_dyn_state}
 # -----------------------------------------------------------------
 
 # -----------------------------------------------------------------
