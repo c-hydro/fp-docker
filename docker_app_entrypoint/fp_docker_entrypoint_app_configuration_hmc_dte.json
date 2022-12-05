@@ -150,6 +150,7 @@
           "data_static:point:variable:joint:mandatory": false,
           "data_static:point:variable:lake:mandatory": false,
           "data_static:point:variable:sections:mandatory": true,
+          "data_static:shapefile:variable:sections:mandatory": false,
           "data_static:shapefile:file_name": "fp_sections_{run_domain}.shp",
           "data_static:shapefile:folder_name": "{run_mount_folder_static}/shapefile/",
 
@@ -282,6 +283,7 @@
           "data_static:point:variable:joint:mandatory": ["DataGeo", "Point", "hmc_file_variable", "Joint", "mandatory"],
           "data_static:point:variable:lake:mandatory": ["DataGeo", "Point", "hmc_file_variable", "Lake", "mandatory"],
           "data_static:point:variable:sections:mandatory": ["DataGeo", "Point", "hmc_file_variable", "Section", "mandatory"],
+          "data_static:shapefile:variable:sections:mandatory": ["DataGeo", "Shapefile", "hmc_file_variable", "Section", "mandatory"],
           "data_static:shapefile:file_name": ["DataGeo", "Shapefile", "hmc_file_name"],
           "data_static:shapefile:folder_name": ["DataGeo", "Shapefile", "hmc_file_folder"],
 
